@@ -1,0 +1,23 @@
+@MealPreparator.Api_HostAddress = http://localhost:5080
+
+GET {{MealPreparator.Api_HostAddress}}/health
+
+###
+
+GET {{MealPreparator.Api_HostAddress}}/api/ingredients
+
+###
+
+GET {{MealPreparator.Api_HostAddress}}/api/recipes
+
+###
+
+POST {{MealPreparator.Api_HostAddress}}/api/shopping-list
+Content-Type: application/json
+
+{
+  "items": [
+    { "recipeId": 1, "portions": 2 },
+    { "recipeId": 2, "portions": 3 }
+  ]
+}

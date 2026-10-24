@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/MealPreparator.Domain/MealPreparator.Domain.csproj" />
+  <Project Path="src/MealPreparator.Application/MealPreparator.Application.csproj" />
+  <Project Path="src/MealPreparator.Infrastructure/MealPreparator.Infrastructure.csproj" />
+  <Project Path="src/MealPreparator.Api/MealPreparator.Api.csproj" />
+  <Project Path="tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj" />
+  <Project Path="tests/MealPreparator.IntegrationTests/MealPreparator.IntegrationTests.csproj" />
+</Solution>
