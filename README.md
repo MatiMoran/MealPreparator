@@ -44,6 +44,8 @@ En NixOS se puede usar de forma temporal:
 nix-shell -p dotnet-sdk_10
 ```
 
+El hook de pre-commit detecta si `dotnet` está disponible y, si no lo está, lo ejecuta mediante `nix-shell -p dotnet-sdk_10` automáticamente.
+
 ## Puesta en marcha
 
 ```bash
@@ -51,6 +53,14 @@ dotnet restore MealPreparator.slnx
 dotnet tool restore
 dotnet build MealPreparator.slnx
 dotnet test MealPreparator.slnx
+```
+
+## Git hook
+
+The repository includes a pre-commit hook that builds the solution and runs the unit tests before each commit. It uses the current `dotnet` command when available, or starts the Nix shell above automatically. Enable it in this checkout with:
+
+```bash
+git config core.hooksPath .githooks
 ```
 
 Generar una nueva migración cuando cambie el modelo:

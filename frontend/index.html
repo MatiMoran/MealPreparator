@@ -302,8 +302,15 @@
                     <input class="form__input" id="ingredient-name" type="text">
                 </div>
                 <div class="form__row">
-                    <label class="form__label">Unidad (usá «presente o ausente» para condimentos)</label>
+                    <label class="form__label">Unidad</label>
                     <select class="form__input" id="ingredient-unit"></select>
+                    <input type="checkbox" id="ingredient-binary" aria-label="Ingrediente binario">
+                </div>
+                <div class="form__row" id="ingredient-conversions-row">
+                    <label class="form__label">Conversiones a unidad base</label>
+                    <p class="form__hint" id="ingredient-conversions-hint">Cada factor indica cuánto equivale 1 unidad alternativa en la unidad base.</p>
+                    <div id="ingredient-conversions"></div>
+                    <button class="form__link" id="ingredient-conversion-add" type="button">Agregar conversión</button>
                 </div>
                 <div class="form__row">
                     <label class="form__label">Imagen</label>
@@ -342,6 +349,7 @@
                 <div class="form__row">
                     <label class="form__label">Unidad</label>
                     <select class="form__input" id="inline-ing-unit"></select>
+                    <input type="checkbox" id="inline-ing-binary" aria-label="Ingrediente binario">
                 </div>
                 <div class="form__row">
                     <label class="form__label">Imagen</label>

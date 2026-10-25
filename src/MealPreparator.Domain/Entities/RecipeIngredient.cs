@@ -1,5 +1,5 @@
-using MealPreparator.Domain.Enums;
 using MealPreparator.Domain.Exceptions;
+using MealPreparator.Domain.Enums;
 
 namespace MealPreparator.Domain.Entities;
 
@@ -13,13 +13,15 @@ public sealed class RecipeIngredient
 
     public Ingredient Ingredient { get; private set; } = null!;
 
-    public decimal Quantity { get; private set; }
+    public decimal? Quantity { get; private set; }
+
+    public UnitOfMeasure? Unit { get; private set; }
 
     private RecipeIngredient()
     {
     }
 
-    public RecipeIngredient(int ingredientId, decimal quantity)
+    public RecipeIngredient(int ingredientId, decimal? quantity, UnitOfMeasure? unit = null)
     {
         if (ingredientId <= 0)
         {
@@ -28,18 +30,42 @@ public sealed class RecipeIngredient
 
         IngredientId = ingredientId;
         SetQuantity(quantity);
+        Unit = unit;
     }
 
-    public RecipeIngredient(Ingredient ingredient, decimal quantity)
-        : this(ingredient?.Id ?? throw new ArgumentNullException(nameof(ingredient)), quantity)
+    public RecipeIngredient(Ingredient ingredient, decimal? quantity, UnitOfMeasure? unit = null)
     {
+        ArgumentNullException.ThrowIfNull(ingredient);
+        if (ingredient.Id <= 0)
+        {
+            throw new DomainValidationException("Ingredient id must be greater than zero.");
+        }
+
+        IngredientId = ingredient.Id;
         Ingredient = ingredient;
-        SetQuantity(ingredient.Unit == UnitOfMeasure.Binary ? 1m : quantity);
+        SetMeasurement(quantity, ingredient.IsBinary ? null : unit ?? ingredient.Unit);
     }
 
-    public void SetQuantity(decimal quantity)
+    public void SetQuantity(decimal? quantity)
     {
-        if (quantity <= 0)
+        SetMeasurement(quantity, Unit);
+    }
+
+    public void SetMeasurement(decimal? quantity, UnitOfMeasure? unit)
+    {
+        if (Ingredient?.IsBinary == true)
+        {
+            if (quantity.HasValue)
+            {
+                throw new DomainValidationException("Binary ingredients cannot have a quantity.");
+            }
+
+            Quantity = null;
+            Unit = null;
+            return;
+        }
+
+        if (!quantity.HasValue || quantity <= 0)
         {
             throw new DomainValidationException("Ingredient quantity must be greater than zero.");
         }
@@ -49,6 +75,12 @@ public sealed class RecipeIngredient
             throw new DomainValidationException("Ingredient quantity is too large.");
         }
 
-        Quantity = Ingredient?.Unit == UnitOfMeasure.Binary ? 1m : quantity;
+        if (Ingredient is not null && !Ingredient.SupportsUnit(unit))
+        {
+            throw new DomainValidationException("The selected unit has no conversion for this ingredient.");
+        }
+
+        Quantity = quantity;
+        Unit = unit;
     }
 }

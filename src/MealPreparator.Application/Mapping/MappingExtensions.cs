@@ -8,7 +8,20 @@ public static class MappingExtensions
 {
     public static IngredientDto ToDto(this Ingredient ingredient)
     {
-        return new IngredientDto(ingredient.Id, ingredient.Name, ingredient.Unit, ingredient.ImageUrl);
+        return new IngredientDto(
+            ingredient.Id,
+            ingredient.Name,
+            ingredient.Unit,
+            ingredient.IsBinary,
+            ingredient.ImageUrl,
+            ingredient.UnitConversions
+                .OrderBy(conversion => conversion.Unit)
+                .Select(conversion => new IngredientUnitConversionDto(
+                    conversion.Unit,
+                    conversion.Factor,
+                    conversion.Source,
+                    conversion.Note))
+                .ToList());
     }
 
     public static RecipeSummaryDto ToSummaryDto(this Recipe recipe)
@@ -22,11 +35,10 @@ public static class MappingExtensions
             .Select(recipeIngredient => new RecipeIngredientDto(
                 recipeIngredient.IngredientId,
                 recipeIngredient.Ingredient.Name,
-                recipeIngredient.Ingredient.Unit,
-                recipeIngredient.Ingredient.Unit.ToSpanishDisplay(recipeIngredient.Quantity),
-                recipeIngredient.Ingredient.Unit == MealPreparator.Domain.Enums.UnitOfMeasure.Binary
-                    ? 1m
-                    : recipeIngredient.Quantity))
+                recipeIngredient.Unit,
+                recipeIngredient.Ingredient.IsBinary,
+                recipeIngredient.Unit.ToSpanishDisplay(recipeIngredient.Quantity),
+                recipeIngredient.Quantity))
             .OrderBy(ingredient => ingredient.IngredientName, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -41,11 +53,14 @@ public static class MappingExtensions
 
     public static ShoppingListItemDto ToDto(this ShoppingListEntry entry)
     {
-        var quantity = Math.Round(entry.TotalQuantity, 2, MidpointRounding.AwayFromZero);
+        decimal? quantity = entry.TotalQuantity is null
+            ? null
+            : Math.Round(entry.TotalQuantity.Value, 2, MidpointRounding.AwayFromZero);
         return new ShoppingListItemDto(
             entry.IngredientId,
             entry.IngredientName,
             entry.Unit,
+            entry.IsBinary,
             entry.Unit.ToSpanishDisplay(quantity),
             quantity);
     }

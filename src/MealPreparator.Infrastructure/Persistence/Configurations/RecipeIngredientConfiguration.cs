@@ -17,7 +17,12 @@ public sealed class RecipeIngredientConfiguration : IEntityTypeConfiguration<Rec
         });
 
         builder.Property(recipeIngredient => recipeIngredient.Quantity)
-            .IsRequired();
+            .IsRequired(false);
+
+        builder.Property(recipeIngredient => recipeIngredient.Unit)
+            .HasConversion<string>()
+            .HasMaxLength(32)
+            .IsRequired(false);
 
         builder.HasOne(recipeIngredient => recipeIngredient.Ingredient)
             .WithMany()

@@ -26,6 +26,9 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsBinary")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -33,7 +36,6 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                         .UseCollation("NOCASE");
 
                     b.Property<string>("Unit")
-                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
@@ -80,7 +82,11 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<decimal?>("Quantity")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.HasKey("RecipeId", "IngredientId");
@@ -88,6 +94,32 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                     b.HasIndex("IngredientId");
 
                     b.ToTable("RecipeIngredients", (string)null);
+                });
+
+            modelBuilder.Entity("MealPreparator.Domain.Entities.IngredientUnitConversion", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Factor")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IngredientId", "Unit");
+
+                    b.ToTable("IngredientUnitConversions", (string)null);
                 });
 
             modelBuilder.Entity("MealPreparator.Domain.Entities.RecipeIngredient", b =>
@@ -107,6 +139,22 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                     b.Navigation("Ingredient");
 
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("MealPreparator.Domain.Entities.IngredientUnitConversion", b =>
+                {
+                    b.HasOne("MealPreparator.Domain.Entities.Ingredient", "Ingredient")
+                        .WithMany("UnitConversions")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+                });
+
+            modelBuilder.Entity("MealPreparator.Domain.Entities.Ingredient", b =>
+                {
+                    b.Navigation("UnitConversions");
                 });
 
             modelBuilder.Entity("MealPreparator.Domain.Entities.Recipe", b =>

@@ -2,7 +2,10 @@ using MealPreparator.Domain.Enums;
 
 namespace MealPreparator.Application.Dtos;
 
-public sealed record RecipeIngredientRequest(int IngredientId, decimal Quantity);
+public sealed record RecipeIngredientRequest(
+    int IngredientId,
+    decimal? Quantity,
+    UnitOfMeasure? Unit = null);
 
 public sealed record CreateRecipeRequest(
     string Name,
@@ -21,9 +24,10 @@ public sealed record UpdateRecipeRequest(
 public sealed record RecipeIngredientDto(
     int IngredientId,
     string IngredientName,
-    UnitOfMeasure Unit,
+    UnitOfMeasure? Unit,
+    bool IsBinary,
     string UnitDisplay,
-    decimal Quantity);
+    decimal? Quantity);
 
 public sealed record RecipeDto(
     int Id,
@@ -38,10 +42,11 @@ public sealed record RecipeSummaryDto(int Id, string Name, int Servings, string?
 public sealed record CreateRecipeIngredientInput(
     int? IngredientId,
     string? Name,
-    string? Unit,
-    decimal Quantity,
+    UnitOfMeasure? Unit,
+    decimal? Quantity,
     string? ImageUrl,
-    bool CreateNew = false);
+    bool CreateNew = false,
+    bool IsBinary = false);
 
 public sealed record CreateRecipeRequestV2(
     string? Name,

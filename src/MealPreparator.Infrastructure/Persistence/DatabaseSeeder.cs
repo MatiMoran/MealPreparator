@@ -15,6 +15,7 @@ public static class DatabaseSeeder
         if (await dbContext.Ingredients.AnyAsync(cancellationToken))
         {
             await EnsureBinaryIngredientsAsync(dbContext, cancellationToken);
+            await EnsureDefaultConversionsAsync(dbContext, cancellationToken);
             return;
         }
 
@@ -52,6 +53,7 @@ public static class DatabaseSeeder
         await dbContext.SaveChangesAsync(cancellationToken);
 
         await EnsureBinaryIngredientsAsync(dbContext, cancellationToken);
+        await EnsureDefaultConversionsAsync(dbContext, cancellationToken);
 
         var chickenWithRice = new Recipe(
             "Arroz con pollo",
@@ -105,7 +107,9 @@ public static class DatabaseSeeder
             ["aceite de oliva"] = "Aceite de oliva"
         };
 
-        var existingIngredients = await dbContext.Ingredients.ToListAsync(cancellationToken);
+        var existingIngredients = await dbContext.Ingredients
+            .Include(ingredient => ingredient.UnitConversions)
+            .ToListAsync(cancellationToken);
         var normalized = existingIngredients
             .GroupBy(ingredient => NormalizeName(ingredient.Name), StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.Ordinal);
@@ -116,7 +120,7 @@ public static class DatabaseSeeder
             {
                 foreach (var ingredient in matchingIngredients)
                 {
-                    ingredient.Update(ingredient.Name, UnitOfMeasure.Binary);
+                    ingredient.Update(ingredient.Name, null, true);
                 }
 
                 continue;
@@ -124,8 +128,80 @@ public static class DatabaseSeeder
 
             dbContext.Ingredients.Add(new Ingredient(
                 displayName,
-                UnitOfMeasure.Binary,
-                $"images/ingredients/{normalizedName.Replace(' ', '-')}.jpg"));
+                null,
+                $"images/ingredients/{normalizedName.Replace(' ', '-')}.jpg",
+                true));
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        var binaryRecipeIngredients = await dbContext.RecipeIngredients
+            .Include(recipeIngredient => recipeIngredient.Ingredient)
+            .Where(recipeIngredient => recipeIngredient.Ingredient.IsBinary)
+            .ToListAsync(cancellationToken);
+
+        foreach (var recipeIngredient in binaryRecipeIngredients)
+        {
+            recipeIngredient.SetQuantity(null);
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task EnsureDefaultConversionsAsync(
+        MealPreparatorDbContext dbContext,
+        CancellationToken cancellationToken)
+    {
+        const string source = "https://fdc.nal.usda.gov/food-search/";
+        var defaults = new Dictionary<string, IngredientUnitConversion[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Arroz"] =
+            [
+                new(UnitOfMeasure.Tablespoon, 12m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
+                new(UnitOfMeasure.Teaspoon, 4m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
+                new(UnitOfMeasure.Cup, 185m, source, "Arroz seco, taza de referencia; el peso cambia si está cocido.")
+            ],
+            ["Cebolla"] = [new(UnitOfMeasure.Gram, 1m / 110m, source, "Una cebolla mediana se estima en 110 g comestibles.")],
+            ["Morron"] = [new(UnitOfMeasure.Gram, 1m / 119m, source, "Un morrón mediano se estima en 119 g comestibles.")],
+            ["Tomate"] = [new(UnitOfMeasure.Piece, 123m, source, "Un tomate mediano se estima en 123 g comestibles.")],
+            ["Pollo"] = [new(UnitOfMeasure.Piece, 174m, source, "Una pechuga cocida deshuesada se estima en 174 g; el corte y la cocción cambian el peso.")],
+            ["Manzana"] = [new(UnitOfMeasure.Gram, 1m / 182m, source, "Una manzana mediana se estima en 182 g comestibles.")],
+            ["Banana"] = [new(UnitOfMeasure.Gram, 1m / 118m, source, "Una banana mediana se estima en 118 g comestibles sin cáscara.")],
+            ["Naranja"] = [new(UnitOfMeasure.Gram, 1m / 131m, source, "Una naranja mediana se estima en 131 g comestibles.")],
+            ["Azucar"] =
+            [
+                new(UnitOfMeasure.Tablespoon, 12.5m, source, "Azúcar granulada, medida rasa aproximada."),
+                new(UnitOfMeasure.Teaspoon, 4.2m, source, "Azúcar granulada, medida rasa aproximada."),
+                new(UnitOfMeasure.Cup, 200m, source, "Azúcar granulada, taza de referencia.")
+            ],
+            ["Yogur"] =
+            [
+                new(UnitOfMeasure.Tablespoon, 15m, source, "Yogur natural, peso aproximado por medida rasa."),
+                new(UnitOfMeasure.Teaspoon, 5m, source, "Yogur natural, peso aproximado por medida rasa."),
+                new(UnitOfMeasure.Cup, 245m, source, "Yogur natural, taza de referencia.")
+            ]
+        };
+
+        var ingredients = await dbContext.Ingredients
+            .Include(ingredient => ingredient.UnitConversions)
+            .ToListAsync(cancellationToken);
+
+        foreach (var ingredient in ingredients)
+        {
+            if (ingredient.IsBinary || !defaults.TryGetValue(ingredient.Name, out var conversions))
+            {
+                continue;
+            }
+
+            var additions = conversions
+                .Where(conversion => conversion.Unit != ingredient.Unit &&
+                    ingredient.UnitConversions.All(existing => existing.Unit != conversion.Unit))
+                .ToList();
+
+            if (additions.Count > 0)
+            {
+                ingredient.SetUnitConversions(ingredient.UnitConversions.Concat(additions));
+            }
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);

@@ -52,7 +52,10 @@ public sealed class RecipeService
 
         var recipe = new Recipe(validated.Name, validated.Servings, validated.Instructions, request.ImageUrl);
         recipe.ReplaceIngredients(validated.Ingredients.Select(item =>
-            new RecipeIngredient(ingredientsById[item.IngredientId], item.Quantity)));
+            new RecipeIngredient(
+                ingredientsById[item.IngredientId],
+                GetQuantity(item.Quantity, ingredientsById[item.IngredientId]),
+                GetUnit(item.Unit, ingredientsById[item.IngredientId]))));
 
         await _recipes.AddAsync(recipe, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -80,17 +83,13 @@ public sealed class RecipeService
         foreach (var input in request.Ingredients)
         {
             if (input is null) throw new ValidationException("Recipe ingredients cannot contain null entries.");
-            RequestValidator.RequirePositive(input.Quantity, "Ingredient quantity");
-
             Ingredient ingredient;
             if (input.CreateNew || input.IngredientId is null || input.IngredientId == 0)
             {
                 var ingName = RequestValidator.RequireName(input.Name, nameof(input.Name));
-                if (!Enum.TryParse<UnitOfMeasure>(input.Unit, true, out var unit))
-                    throw new ValidationException("Invalid ingredient unit.");
                 if (await _ingredients.ExistsByNameAsync(ingName, cancellationToken: cancellationToken))
                     throw new ConflictException($"An ingredient named '{ingName}' already exists.");
-                ingredient = new Ingredient(ingName, unit, input.ImageUrl);
+                ingredient = new Ingredient(ingName, input.Unit, input.ImageUrl, input.IsBinary);
                 await _ingredients.AddAsync(ingredient, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
@@ -103,7 +102,10 @@ public sealed class RecipeService
             if (!ingredientIds.Add(ingredient.Id))
                 throw new ValidationException("A recipe cannot contain the same ingredient more than once.");
 
-            recipe.AddIngredient(new RecipeIngredient(ingredient, input.Quantity));
+            recipe.AddIngredient(new RecipeIngredient(
+                ingredient,
+                GetQuantity(input.Quantity, ingredient),
+                GetUnit(input.Unit, ingredient)));
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -144,11 +146,16 @@ public sealed class RecipeService
 
             if (existing is null)
             {
-                recipe.AddIngredient(new RecipeIngredient(ingredientsById[item.IngredientId], item.Quantity));
+                recipe.AddIngredient(new RecipeIngredient(
+                    ingredientsById[item.IngredientId],
+                    GetQuantity(item.Quantity, ingredientsById[item.IngredientId]),
+                    GetUnit(item.Unit, ingredientsById[item.IngredientId])));
             }
             else
             {
-                existing.SetQuantity(item.Quantity);
+                existing.SetMeasurement(
+                    GetQuantity(item.Quantity, ingredientsById[item.IngredientId]),
+                    GetUnit(item.Unit, ingredientsById[item.IngredientId]));
             }
         }
 
@@ -223,8 +230,6 @@ public sealed class RecipeService
             }
 
             RequestValidator.RequirePositive(item.IngredientId, "Ingredient id");
-            RequestValidator.RequirePositive(item.Quantity, "Ingredient quantity");
-
             if (!ingredientIds.Add(item.IngredientId))
             {
                 throw new ValidationException("A recipe cannot contain the same ingredient more than once.");
@@ -232,6 +237,42 @@ public sealed class RecipeService
         }
 
         return new ValidatedRecipe(normalizedName, servings, normalizedInstructions, items);
+    }
+
+    private static decimal? GetQuantity(decimal? quantity, Ingredient ingredient)
+    {
+        if (ingredient.IsBinary)
+        {
+            return null;
+        }
+
+        if (!quantity.HasValue || quantity <= 0)
+        {
+            throw new ValidationException("Ingredient quantity must be greater than zero.");
+        }
+
+        return quantity;
+    }
+
+    private static UnitOfMeasure? GetUnit(UnitOfMeasure? requestedUnit, Ingredient ingredient)
+    {
+        if (ingredient.IsBinary)
+        {
+            if (requestedUnit.HasValue)
+            {
+                throw new ValidationException("Binary ingredients cannot have a unit.");
+            }
+
+            return null;
+        }
+
+        var unit = requestedUnit ?? ingredient.Unit;
+        if (!ingredient.SupportsUnit(unit))
+        {
+            throw new ValidationException("The selected unit has no conversion for this ingredient.");
+        }
+
+        return unit;
     }
 
     private sealed record ValidatedRecipe(

@@ -19,6 +19,7 @@ public sealed class IngredientRepository : IIngredientRepository
     {
         return await _dbContext.Ingredients
             .AsNoTracking()
+            .Include(ingredient => ingredient.UnitConversions)
             .OrderBy(ingredient => ingredient.Name)
             .ToListAsync(cancellationToken);
     }
@@ -26,6 +27,7 @@ public sealed class IngredientRepository : IIngredientRepository
     public Task<Ingredient?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return _dbContext.Ingredients
+            .Include(ingredient => ingredient.UnitConversions)
             .FirstOrDefaultAsync(ingredient => ingredient.Id == id, cancellationToken);
     }
 
@@ -34,6 +36,7 @@ public sealed class IngredientRepository : IIngredientRepository
         CancellationToken cancellationToken = default)
     {
         return await _dbContext.Ingredients
+            .Include(ingredient => ingredient.UnitConversions)
             .Where(ingredient => ids.Contains(ingredient.Id))
             .ToListAsync(cancellationToken);
     }

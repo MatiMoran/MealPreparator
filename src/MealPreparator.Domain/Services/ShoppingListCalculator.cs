@@ -45,18 +45,23 @@ public static class ShoppingListCalculator
                     accumulator = new ShoppingListAccumulator(
                         recipeIngredient.IngredientId,
                         recipeIngredient.Ingredient.Name,
-                        recipeIngredient.Ingredient.Unit);
+                        recipeIngredient.Ingredient.Unit,
+                        recipeIngredient.Ingredient.IsBinary);
 
                     totals.Add(recipeIngredient.IngredientId, accumulator);
                 }
 
-                if (recipeIngredient.Ingredient.Unit == UnitOfMeasure.Binary)
+                if (!recipeIngredient.Ingredient.IsBinary)
                 {
-                    accumulator.TotalQuantity = 1m;
-                }
-                else
-                {
-                    accumulator.TotalQuantity += recipeIngredient.Quantity * scaleFactor;
+                    if (!recipeIngredient.Unit.HasValue)
+                    {
+                        throw new DomainValidationException("Measured recipe ingredients must have a unit.");
+                    }
+
+                    var baseQuantity = recipeIngredient.Ingredient.ConvertToBaseQuantity(
+                        recipeIngredient.Quantity!.Value,
+                        recipeIngredient.Unit.Value);
+                    accumulator.TotalQuantity += baseQuantity * scaleFactor;
                 }
             }
         }
@@ -71,6 +76,7 @@ public static class ShoppingListCalculator
                 accumulator.IngredientId,
                 accumulator.IngredientName,
                 accumulator.Unit,
+                accumulator.IsBinary,
                 accumulator.TotalQuantity))
             .OrderBy(entry => entry.IngredientName, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -78,19 +84,23 @@ public static class ShoppingListCalculator
 
     private sealed class ShoppingListAccumulator
     {
-        public ShoppingListAccumulator(int ingredientId, string ingredientName, UnitOfMeasure unit)
+        public ShoppingListAccumulator(int ingredientId, string ingredientName, UnitOfMeasure? unit, bool isBinary)
         {
             IngredientId = ingredientId;
             IngredientName = ingredientName;
             Unit = unit;
+            IsBinary = isBinary;
+            TotalQuantity = isBinary ? null : 0m;
         }
 
         public int IngredientId { get; }
 
         public string IngredientName { get; }
 
-        public UnitOfMeasure Unit { get; }
+        public UnitOfMeasure? Unit { get; }
 
-        public decimal TotalQuantity { get; set; }
+        public bool IsBinary { get; }
+
+        public decimal? TotalQuantity { get; set; }
     }
 }

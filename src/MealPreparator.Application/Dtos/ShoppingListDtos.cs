@@ -9,6 +9,7 @@ public sealed record ShoppingListRequest(List<ShoppingListItemRequest>? Items);
 public sealed record ShoppingListItemDto(
     int IngredientId,
     string IngredientName,
-    UnitOfMeasure Unit,
+    UnitOfMeasure? Unit,
+    bool IsBinary,
     string UnitDisplay,
-    decimal Quantity);
+    decimal? Quantity);

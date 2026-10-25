@@ -1,0 +1,933 @@
+carta:
+  menus:
+    - tipo: "250 g"
+      descripcion: "Déficit calórico"
+      categorias:
+        "Carne":
+          - nombre: "Ajies rellenos de carne magra y queso"
+            imagen: "dafactory_images/2af67c1e2f075fba.jpg"
+          - nombre: "Albondigas a la mostaza con de batatas y brocoli"
+            imagen: "dafactory_images/aef9780934b47c6f.png"
+          - nombre: "Albondigas de carne magra con de Chips de calabaza"
+            imagen: "dafactory_images/23ee405ed104ecc1.png"
+          - nombre: "Albondigas de carne magra con de souffle de espinaca"
+            imagen: "dafactory_images/a95fc86a2be0c2f7.png"
+          - nombre: "Carne a la mostaza con de souffle de espinaca"
+            imagen: "dafactory_images/3d469dbc1b6b1287.png"
+          - nombre: "Carne a la mostaza con de verduras grilladas"
+            imagen: null
+          - nombre: "Carne al champignon con de souffle de brocoli"
+            imagen: "dafactory_images/8083bc15ad8624eb.png"
+          - nombre: "Carne al champignon con espinaca gratinada"
+            imagen: "dafactory_images/c2147d494067d7c8.png"
+          - nombre: "Carne al curry con de zanahorias glaseadas"
+            imagen: "dafactory_images/80fb77f5c39747f8.png"
+          - nombre: "Carne al demiglace con pure de calabaza"
+            imagen: "dafactory_images/67f9dd0a7c334348.png"
+          - nombre: "Carne al demiglace con verduras grilladas"
+            imagen: "dafactory_images/c8d26b3bc13f736d.png"
+          - nombre: "Carne con salsa de brocoli con de zanahorias glaseadas"
+            imagen: "dafactory_images/00f5bead48fc7753.jpg"
+          - nombre: "Carne mechada con espinaca con de wok de verduras"
+            imagen: null
+          - nombre: "Chop suey de carne"
+            imagen: "dafactory_images/6640e03b90cf8ca1.jpg"
+          - nombre: "Goulash con arroz cremoso"
+            imagen: "dafactory_images/e2f26138ba53fd9d.jpg"
+          - nombre: "Goulash con espinaca gratinada"
+            imagen: "dafactory_images/9acda351f16d4918.jpg"
+          - nombre: "Goulash con pure de calabaza"
+            imagen: "dafactory_images/fdb24c3ad489db63.jpg"
+          - nombre: "Goulash con zanahorias glaseada"
+            imagen: "dafactory_images/c46dee6c55c4f300.jpeg"
+          - nombre: "Guiso de lentejas con carne magra"
+            imagen: null
+          - nombre: "Hamburguesa a la Napolitana con de pure de calabaza"
+            imagen: null
+          - nombre: "Hamburguesa de carne magra con pure de calabaza"
+            imagen: null
+          - nombre: "Lasagna de berenjenas al vapor con bolognesa y queso"
+            imagen: "dafactory_images/033944aaf5f90098.jpg"
+          - nombre: "Lasagña de berenjenas al vapor con bolognesa y queso por salut"
+            imagen: "dafactory_images/018fdee7cac66255.jpg"
+          - nombre: "Lasagna de zucchinis al vapor con bolognesa y queso"
+            imagen: "dafactory_images/129f3e4331abaa00.jpg"
+          - nombre: "Milanesa de peceto a la napolitana con espinaca gratinada"
+            imagen: "dafactory_images/70bdb67d3a82fbe6.png"
+          - nombre: "Milanesa de peceto con chips de calabaza"
+            imagen: "dafactory_images/325d44fad675b332.jpeg"
+          - nombre: "Milanesa de peceto con pure de boniato"
+            imagen: "dafactory_images/61c08e57e9453a64.png"
+          - nombre: "Pastel de calabaza relleno de carne"
+            imagen: "dafactory_images/facab726fc4a535c.png"
+          - nombre: "Pastel de calabaza y zapallitos relleno carne"
+            imagen: "dafactory_images/36b0d0f239351824.png"
+          - nombre: "Strogonoff con pure de calabaza"
+            imagen: "dafactory_images/04b907301eae6a12.png"
+          - nombre: "Strogonoff con pure mixto"
+            imagen: "dafactory_images/fd3fbc1663d7d740.jpeg"
+          - nombre: "Zapallitos rellenos"
+            imagen: "dafactory_images/e21b81aff64b4cef.png"
+        "Pollo":
+          - nombre: "Chop suey de pollo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+          - nombre: "Pechuga a la barbacoa con batata y brocoli"
+            imagen: "dafactory_images/d518978ea509c7ec.png"
+          - nombre: "Pechuga a la barbacoa con chips de calabaza"
+            imagen: "dafactory_images/e2b0af3399465c97.png"
+          - nombre: "Pechuga a la mostaza con de pure mixto"
+            imagen: "dafactory_images/5dc4b84277beca4c.png"
+          - nombre: "Pechuga a la mostaza con de souffle de brocoli"
+            imagen: "dafactory_images/b581d93b55898195.png"
+          - nombre: "Pechuga a la mostaza con de verduras grilladas"
+            imagen: "dafactory_images/292881b644a5c75c.png"
+          - nombre: "Pechuga a la pizza con pure de calabaza"
+            imagen: "dafactory_images/b5ad20b58592c169.png"
+          - nombre: "Pechuga al champignon con souffle de brocoli"
+            imagen: null
+          - nombre: "Pechuga al champignon con souffle de calabaza"
+            imagen: "dafactory_images/ba4c5644b8148d91.png"
+          - nombre: "Pechuga al curry con arroz de brocoli"
+            imagen: "dafactory_images/d9b96058fe122af8.png"
+          - nombre: "Pechuga al perejil con boniatos asados"
+            imagen: "dafactory_images/c50242302732071f.jpg"
+          - nombre: "Pechuga al puerro con chips de calabaza"
+            imagen: "dafactory_images/70f1a70e516816fe.png"
+          - nombre: "Pechuga al puerro con milhojas de calabaza"
+            imagen: "dafactory_images/f838a19979ff9357.png"
+          - nombre: "Pechuga al puerro con pure mixto"
+            imagen: "dafactory_images/f306fd3b36fbf767.png"
+          - nombre: "Pechuga al vedeo con chips de calabaza"
+            imagen: "dafactory_images/a22ea6b3eb251b8f.png"
+          - nombre: "Pechuga al verdeo con batata y brocoli"
+            imagen: "dafactory_images/0aec79631d9cc93c.png"
+          - nombre: "Pechuga al verdeo con espinaca gratinada"
+            imagen: "dafactory_images/b99db466b6149c83.jpg"
+          - nombre: "Pechuga con brocoli gratinada"
+            imagen: "dafactory_images/859ced8abdc4bf96.png"
+          - nombre: "Pechuga con de wok de verduras"
+            imagen: "dafactory_images/3f53939c4888b7a8.png"
+          - nombre: "Pechuga rellena de jamon y queso con de verduras grilladas"
+            imagen: "dafactory_images/f7b2d5c412b69ed2.png"
+          - nombre: "Pechuga rellena de jamon y queso con pure de calabaza"
+            imagen: "dafactory_images/243b31c64b358b39.png"
+        "Cerdo":
+          - nombre: "Bondiola a la barbacoa con pure de batata"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola a la barbacoa con pure de calabaza"
+            imagen: "dafactory_images/e25fac1e95723bf4.jpeg"
+          - nombre: "Bondiola a la mostaza con pure de papa"
+            imagen: "dafactory_images/2371b65c2b38798c.png"
+          - nombre: "Bondiola a la mostaza con souffle de calabaza"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola agridulce con batata y brocoli"
+            imagen: "dafactory_images/75f35dd657d20975.png"
+          - nombre: "Bondiola agridulce con verduras grilladas"
+            imagen: "dafactory_images/bde5ef0a98c74253.jpeg"
+          - nombre: "Carre a la mostaza con de wok de verduras"
+            imagen: "dafactory_images/238705948f8ab439.png"
+          - nombre: "Carre a la mostaza con pure de calabaza"
+            imagen: "dafactory_images/ea5cdc9fbdf01cf0.png"
+          - nombre: "Carre con de wok de verduras"
+            imagen: "dafactory_images/4b650bb6512c0c8c.jpeg"
+          - nombre: "Carre con pure de batata y brocoli"
+            imagen: "dafactory_images/28723464ff8dedab.png"
+          - nombre: "Carre con salsa ciruela con manzanas asadas"
+            imagen: "dafactory_images/aa08dd5ac76bec16.png"
+          - nombre: "Carre con salsa de ciruelas con de pure calabaza"
+            imagen: "dafactory_images/271b5b4fb2d010ca.png"
+          - nombre: "Carre de cerdo al champignon con pure de coliflor"
+            imagen: "dafactory_images/c6eac2f892b77da1.png"
+          - nombre: "Chop de suey de cerdo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+        "Pescado":
+          - nombre: "Filet de merluza a la napolitana con brocoli"
+            imagen: null
+          - nombre: "Filet de merluza con de espinaca gratinada"
+            imagen: "dafactory_images/f4d51ea221f7b0c8.jpg"
+          - nombre: "Filet de merluza con de pure de coliflor"
+            imagen: "dafactory_images/cf2387995d601aee.jpeg"
+          - nombre: "Filet de merluza con de wok de verduras"
+            imagen: "dafactory_images/2cc1be107b1954aa.jpeg"
+          - nombre: "Filet de merluza con salsa de queso con pure de calabaza"
+            imagen: "dafactory_images/591227f77ddf8ed7.jpeg"
+          - nombre: "Merluza con salsa de roquefort con de chips de calabaza"
+            imagen: "dafactory_images/cef7f7df768e2bd3.jpeg"
+        "Pastas":
+          - nombre: "Canelones de espinaca y carne con filetto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y ricota con fileto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelones de pollo y verdura con filetto"
+            imagen: "dafactory_images/57489324948044bc.jpg"
+          - nombre: "Canelones de ricota jamon y queso con bolognesa"
+            imagen: "dafactory_images/3eec2359930053f3.jpg"
+          - nombre: "Crepes de bolognesa c/ filetto"
+            imagen: "dafactory_images/ec758499ee53c68b.jpeg"
+          - nombre: "Crepes de Cabutia ricota y nueces"
+            imagen: "dafactory_images/28dc29cec1ebedd3.jpeg"
+          - nombre: "Crepes de espianaca y queso"
+            imagen: "dafactory_images/d8c827eaa5355f41.png"
+          - nombre: "Malfati de calabaza con salsa filetto"
+            imagen: "dafactory_images/fdf105b870dce46f.jpg"
+        "Omelette":
+          - nombre: "Omelete Capresse"
+            imagen: "dafactory_images/87d049266ffe2a78.jpeg"
+          - nombre: "Omelete Espinaca y queso"
+            imagen: "dafactory_images/8c94b98a707e2bc2.jpeg"
+          - nombre: "Omelete Jamon y queso"
+            imagen: "dafactory_images/35770638170c71df.jpeg"
+          - nombre: "Omelete Queso y Champigñones"
+            imagen: "dafactory_images/8c94b98a707e2bc2.jpeg"
+        "Veggie":
+          - nombre: "Budin tricolor espinaca , zanahoria y ricota"
+            imagen: null
+          - nombre: "Croquetas de espinaca, ricota y queso"
+            imagen: null
+          - nombre: "Guiso de lentejas veggie"
+            imagen: null
+          - nombre: "Hamburguesa de brocoli y arroz yamani con pure de calabaza"
+            imagen: null
+          - nombre: "Hamburguesa de lenteja y quinoa con pure de calabaza"
+            imagen: "dafactory_images/d0cdf9dda74614af.png"
+          - nombre: "Lasagna de berenjenas con soja texturizada"
+            imagen: "dafactory_images/5c06ec705aceb610.jpg"
+          - nombre: "Lasagna de zucchinis con soja texturizada"
+            imagen: "dafactory_images/f21657422cc2d1a7.jpg"
+          - nombre: "Milanesa de soja a la napolitana con chips de calabaza"
+            imagen: "dafactory_images/79c28eb94c320a71.png"
+          - nombre: "Milanesa de soja a la napolitana con croquetas de espinaca"
+            imagen: "dafactory_images/0e8b108db47f049d.png"
+          - nombre: "Milanesa de soja al puerro con de espinaca Gratinada"
+            imagen: null
+          - nombre: "Milhojas de calabaza a la fugazetta"
+            imagen: null
+          - nombre: "Pastel de calabaza con soja texturizada"
+            imagen: null
+          - nombre: "Pizza Light"
+            imagen: null
+          - nombre: "Risotto con verduras"
+            imagen: null
+          - nombre: "Risotto de calabaza y nueces"
+            imagen: null
+          - nombre: "Souffle de brocoli con de pure de cabutia"
+            imagen: "dafactory_images/d2481bc348aa6f5d.png"
+          - nombre: "Tortilla de espinaca y champignones"
+            imagen: "dafactory_images/5d460e5fd08168af.jpeg"
+          - nombre: "Tortilla de zapallitos"
+            imagen: "dafactory_images/8304ea0dc4e24ec5.jpeg"
+        "Tartas":
+          - nombre: "Tarta de atun (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/03d8c819a74fa73c.png"
+          - nombre: "Tarta de calabaza y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/4e0740672ec073fd.png"
+          - nombre: "Tarta de caprese (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/94ddaf8cedf7c547.png"
+          - nombre: "Tarta de cebolla y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/dd97a383e14bfe04.png"
+          - nombre: "Tarta de espinaca y queso al champignon (Base de ricota y sin harinas)"
+            imagen: null
+          - nombre: "Tarta de jamon y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/91f0d8c75aa94d25.jpg"
+          - nombre: "Tarta de pechuga al champignon (Base de ricota y sin harinas)"
+            imagen: null
+          - nombre: "Tarta de puerro (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/f268e9427f8921de.jpg"
+          - nombre: "Tarta de zapallitos (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/35df66b9921daadc.png"
+    - tipo: "350 g"
+      descripcion: "Déficit o mantenimiento"
+      categorias:
+        "Carne":
+          - nombre: "Ajies rellenos de carne magra y queso"
+            imagen: "dafactory_images/2af67c1e2f075fba.jpg"
+          - nombre: "Albondigas a la mostaza con de batatas y brocoli"
+            imagen: "dafactory_images/aef9780934b47c6f.png"
+          - nombre: "Albondigas de carne magra con de Chips de calabaza"
+            imagen: "dafactory_images/23ee405ed104ecc1.png"
+          - nombre: "Albondigas de carne magra con de souffle de espinaca"
+            imagen: "dafactory_images/a95fc86a2be0c2f7.png"
+          - nombre: "Carne a la mostaza con de souffle de espinaca"
+            imagen: "dafactory_images/3d469dbc1b6b1287.png"
+          - nombre: "Carne a la mostaza con de verduras grilladas"
+            imagen: null
+          - nombre: "Carne al champignon con de souffle de brocoli"
+            imagen: "dafactory_images/8083bc15ad8624eb.png"
+          - nombre: "Carne al champignon con espinaca gratinada"
+            imagen: "dafactory_images/c2147d494067d7c8.png"
+          - nombre: "Carne al curry con de zanahorias glaseadas"
+            imagen: "dafactory_images/80fb77f5c39747f8.png"
+          - nombre: "Carne al demiglace con pure de calabaza"
+            imagen: "dafactory_images/67f9dd0a7c334348.png"
+          - nombre: "Carne al demiglace con verduras grilladas"
+            imagen: "dafactory_images/c8d26b3bc13f736d.png"
+          - nombre: "Carne con salsa de brocoli con de zanahorias glaseadas"
+            imagen: "dafactory_images/00f5bead48fc7753.jpg"
+          - nombre: "Carne mechada con espinaca con de wok de verduras"
+            imagen: null
+          - nombre: "Chop suey de carne"
+            imagen: "dafactory_images/6640e03b90cf8ca1.jpg"
+          - nombre: "Goulash con arroz cremoso"
+            imagen: "dafactory_images/e2f26138ba53fd9d.jpg"
+          - nombre: "Goulash con espinaca gratinada"
+            imagen: "dafactory_images/9acda351f16d4918.jpg"
+          - nombre: "Goulash con pure de calabaza"
+            imagen: "dafactory_images/fdb24c3ad489db63.jpg"
+          - nombre: "Goulash con zanahorias glaseada"
+            imagen: "dafactory_images/c46dee6c55c4f300.jpeg"
+          - nombre: "Guiso de lentejas con carne magra"
+            imagen: null
+          - nombre: "Hamburguesa a la Napolitana con de pure de calabaza"
+            imagen: null
+          - nombre: "Hamburguesa de carne magra con pure de calabaza"
+            imagen: null
+          - nombre: "Lasagna de berenjenas al vapor con bolognesa y queso"
+            imagen: "dafactory_images/033944aaf5f90098.jpg"
+          - nombre: "Lasagña de berenjenas al vapor con bolognesa y queso por salut"
+            imagen: "dafactory_images/018fdee7cac66255.jpg"
+          - nombre: "Lasagna de zucchinis al vapor con bolognesa y queso"
+            imagen: "dafactory_images/129f3e4331abaa00.jpg"
+          - nombre: "Milanesa de peceto a la napolitana con espinaca gratinada"
+            imagen: "dafactory_images/70bdb67d3a82fbe6.png"
+          - nombre: "Milanesa de peceto con chips de calabaza"
+            imagen: "dafactory_images/325d44fad675b332.jpeg"
+          - nombre: "Milanesa de peceto con pure de boniato"
+            imagen: "dafactory_images/61c08e57e9453a64.png"
+          - nombre: "Pastel de calabaza relleno de carne"
+            imagen: "dafactory_images/facab726fc4a535c.png"
+          - nombre: "Pastel de calabaza y zapallitos relleno carne"
+            imagen: "dafactory_images/36b0d0f239351824.png"
+          - nombre: "Strogonoff con pure de calabaza"
+            imagen: "dafactory_images/04b907301eae6a12.png"
+          - nombre: "Strogonoff con pure mixto"
+            imagen: "dafactory_images/fd3fbc1663d7d740.jpeg"
+          - nombre: "Zapallitos rellenos"
+            imagen: "dafactory_images/e21b81aff64b4cef.png"
+        "Pollo":
+          - nombre: "Chop suey de pollo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+          - nombre: "Pechuga a la barbacoa con batata y brocoli"
+            imagen: "dafactory_images/d518978ea509c7ec.png"
+          - nombre: "Pechuga a la barbacoa con chips de calabaza"
+            imagen: "dafactory_images/e2b0af3399465c97.png"
+          - nombre: "Pechuga a la mostaza con de pure mixto"
+            imagen: "dafactory_images/5dc4b84277beca4c.png"
+          - nombre: "Pechuga a la mostaza con de souffle de brocoli"
+            imagen: "dafactory_images/b581d93b55898195.png"
+          - nombre: "Pechuga a la mostaza con de verduras grilladas"
+            imagen: "dafactory_images/292881b644a5c75c.png"
+          - nombre: "Pechuga a la pizza con pure de calabaza"
+            imagen: "dafactory_images/b5ad20b58592c169.png"
+          - nombre: "Pechuga al champignon con souffle de brocoli"
+            imagen: null
+          - nombre: "Pechuga al champignon con souffle de calabaza"
+            imagen: "dafactory_images/ba4c5644b8148d91.png"
+          - nombre: "Pechuga al curry con arroz de brocoli"
+            imagen: "dafactory_images/d9b96058fe122af8.png"
+          - nombre: "Pechuga al perejil con boniatos asados"
+            imagen: "dafactory_images/c50242302732071f.jpg"
+          - nombre: "Pechuga al puerro con chips de calabaza"
+            imagen: "dafactory_images/70f1a70e516816fe.png"
+          - nombre: "Pechuga al puerro con milhojas de calabaza"
+            imagen: "dafactory_images/f838a19979ff9357.png"
+          - nombre: "Pechuga al puerro con pure mixto"
+            imagen: "dafactory_images/f306fd3b36fbf767.png"
+          - nombre: "Pechuga al vedeo con chips de calabaza"
+            imagen: "dafactory_images/a22ea6b3eb251b8f.png"
+          - nombre: "Pechuga al verdeo con batata y brocoli"
+            imagen: "dafactory_images/0aec79631d9cc93c.png"
+          - nombre: "Pechuga al verdeo con espinaca gratinada"
+            imagen: "dafactory_images/b99db466b6149c83.jpg"
+          - nombre: "Pechuga con brocoli gratinada"
+            imagen: "dafactory_images/859ced8abdc4bf96.png"
+          - nombre: "Pechuga con de wok de verduras"
+            imagen: "dafactory_images/3f53939c4888b7a8.png"
+          - nombre: "Pechuga rellena de jamon y queso con de verduras grilladas"
+            imagen: "dafactory_images/f7b2d5c412b69ed2.png"
+          - nombre: "Pechuga rellena de jamon y queso con pure de calabaza"
+            imagen: "dafactory_images/243b31c64b358b39.png"
+        "Cerdo":
+          - nombre: "Bondiola a la barbacoa con pure de batata"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola a la barbacoa con pure de calabaza"
+            imagen: "dafactory_images/e25fac1e95723bf4.jpeg"
+          - nombre: "Bondiola a la mostaza con pure de papa"
+            imagen: "dafactory_images/2371b65c2b38798c.png"
+          - nombre: "Bondiola a la mostaza con souffle de calabaza"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola agridulce con batata y brocoli"
+            imagen: "dafactory_images/75f35dd657d20975.png"
+          - nombre: "Bondiola agridulce con verduras grilladas"
+            imagen: "dafactory_images/bde5ef0a98c74253.jpeg"
+          - nombre: "Carre a la mostaza con de wok de verduras"
+            imagen: "dafactory_images/238705948f8ab439.png"
+          - nombre: "Carre a la mostaza con pure de calabaza"
+            imagen: "dafactory_images/ea5cdc9fbdf01cf0.png"
+          - nombre: "Carre con de wok de verduras"
+            imagen: "dafactory_images/4b650bb6512c0c8c.jpeg"
+          - nombre: "Carre con pure de batata y brocoli"
+            imagen: "dafactory_images/28723464ff8dedab.png"
+          - nombre: "Carre con salsa ciruela con manzanas asadas"
+            imagen: "dafactory_images/aa08dd5ac76bec16.png"
+          - nombre: "Carre con salsa de ciruelas con de pure calabaza"
+            imagen: "dafactory_images/271b5b4fb2d010ca.png"
+          - nombre: "Carre de cerdo al champignon con pure de coliflor"
+            imagen: "dafactory_images/c6eac2f892b77da1.png"
+          - nombre: "Chop de suey de cerdo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+        "Pescado":
+          - nombre: "Filet de merluza a la napolitana con brocoli"
+            imagen: null
+          - nombre: "Filet de merluza con de espinaca gratinada"
+            imagen: "dafactory_images/f4d51ea221f7b0c8.jpg"
+          - nombre: "Filet de merluza con de pure de coliflor"
+            imagen: "dafactory_images/cf2387995d601aee.jpeg"
+          - nombre: "Filet de merluza con de wok de verduras"
+            imagen: "dafactory_images/2cc1be107b1954aa.jpeg"
+          - nombre: "Filet de merluza con salsa de queso con pure de calabaza"
+            imagen: "dafactory_images/591227f77ddf8ed7.jpeg"
+          - nombre: "Merluza con salsa de roquefort con de chips de calabaza"
+            imagen: "dafactory_images/cef7f7df768e2bd3.jpeg"
+        "Pastas":
+          - nombre: "Canelones de espinaca y carne con filetto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y ricota con fileto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelones de pollo y verdura con filetto"
+            imagen: "dafactory_images/57489324948044bc.jpg"
+          - nombre: "Canelones de ricota jamon y queso con bolognesa"
+            imagen: "dafactory_images/3eec2359930053f3.jpg"
+          - nombre: "Crepes de bolognesa c/ filetto"
+            imagen: "dafactory_images/ec758499ee53c68b.jpeg"
+          - nombre: "Crepes de Cabutia ricota y nueces"
+            imagen: "dafactory_images/28dc29cec1ebedd3.jpeg"
+          - nombre: "Crepes de espianaca y queso"
+            imagen: "dafactory_images/d8c827eaa5355f41.png"
+          - nombre: "Malfati de calabaza con salsa filetto"
+            imagen: "dafactory_images/fdf105b870dce46f.jpg"
+        "Omelette":
+          - nombre: "Omelete Capresse"
+            imagen: "dafactory_images/87d049266ffe2a78.jpeg"
+          - nombre: "Omelete Espinaca y queso"
+            imagen: "dafactory_images/8c94b98a707e2bc2.jpeg"
+          - nombre: "Omelete Jamon y queso"
+            imagen: "dafactory_images/35770638170c71df.jpeg"
+          - nombre: "Omelete Queso y Champigñones"
+            imagen: "dafactory_images/8c94b98a707e2bc2.jpeg"
+        "Veggie":
+          - nombre: "Budin tricolor espinaca , zanahoria y ricota"
+            imagen: null
+          - nombre: "Croquetas de espinaca, ricota y queso"
+            imagen: null
+          - nombre: "Guiso de lentejas veggie"
+            imagen: null
+          - nombre: "Hamburguesa de brocoli y arroz yamani con pure de calabaza"
+            imagen: null
+          - nombre: "Hamburguesa de lenteja y quinoa con pure de calabaza"
+            imagen: "dafactory_images/d0cdf9dda74614af.png"
+          - nombre: "Lasagna de berenjenas con soja texturizada"
+            imagen: "dafactory_images/5c06ec705aceb610.jpg"
+          - nombre: "Lasagna de zucchinis con soja texturizada"
+            imagen: "dafactory_images/f21657422cc2d1a7.jpg"
+          - nombre: "Milanesa de soja a la napolitana con chips de calabaza"
+            imagen: "dafactory_images/79c28eb94c320a71.png"
+          - nombre: "Milanesa de soja a la napolitana con croquetas de espinaca"
+            imagen: "dafactory_images/0e8b108db47f049d.png"
+          - nombre: "Milanesa de soja al puerro con de espinaca Gratinada"
+            imagen: null
+          - nombre: "Milhojas de calabaza a la fugazetta"
+            imagen: null
+          - nombre: "Pastel de calabaza con soja texturizada"
+            imagen: null
+          - nombre: "Pizza Light"
+            imagen: null
+          - nombre: "Risotto con verduras"
+            imagen: null
+          - nombre: "Risotto de calabaza y nueces"
+            imagen: null
+          - nombre: "Souffle de brocoli con de pure de cabutia"
+            imagen: "dafactory_images/d2481bc348aa6f5d.png"
+          - nombre: "Tortilla de espinaca y champignones"
+            imagen: "dafactory_images/5d460e5fd08168af.jpeg"
+          - nombre: "Tortilla de zapallitos"
+            imagen: "dafactory_images/8304ea0dc4e24ec5.jpeg"
+        "Tartas":
+          - nombre: "Tarta de atun (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/03d8c819a74fa73c.png"
+          - nombre: "Tarta de calabaza y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/4e0740672ec073fd.png"
+          - nombre: "Tarta de caprese (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/94ddaf8cedf7c547.png"
+          - nombre: "Tarta de cebolla y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/dd97a383e14bfe04.png"
+          - nombre: "Tarta de espinaca y queso al champignon (Base de ricota y sin harinas)"
+            imagen: null
+          - nombre: "Tarta de jamon y queso (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/91f0d8c75aa94d25.jpg"
+          - nombre: "Tarta de pechuga al champignon (Base de ricota y sin harinas)"
+            imagen: null
+          - nombre: "Tarta de puerro (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/f268e9427f8921de.jpg"
+          - nombre: "Tarta de zapallitos (Base de ricota y sin harinas)"
+            imagen: "dafactory_images/35df66b9921daadc.png"
+    - tipo: "550 g"
+      descripcion: "Aumento de masa muscular o mantenimiento"
+      categorias:
+        "Carne":
+          - nombre: "Albondigas estofadas con arroz cremoso"
+            imagen: "dafactory_images/90bb7ad654a48132.jpg"
+          - nombre: "Albondigas estofadas con pure de calabaza"
+            imagen: null
+          - nombre: "Albondigas estofadas con wok de verduras"
+            imagen: "dafactory_images/640a8dad6afa1da1.png"
+          - nombre: "Calabaza rellena de carne y queso"
+            imagen: null
+          - nombre: "Carne a la mostaza con de verduras grilladas"
+            imagen: null
+          - nombre: "Carne a la mostaza con pure de calabaza"
+            imagen: null
+          - nombre: "Carne a la mostaza con pure mixto"
+            imagen: null
+          - nombre: "Carne al champignon con de souffle de brocoli"
+            imagen: "dafactory_images/8083bc15ad8624eb.png"
+          - nombre: "Carne al champignon con espinaca gratinada"
+            imagen: "dafactory_images/c2147d494067d7c8.png"
+          - nombre: "Carne al demiglace con milhojas de papa"
+            imagen: null
+          - nombre: "Carne al demiglace con pure de calabaza"
+            imagen: "dafactory_images/67f9dd0a7c334348.png"
+          - nombre: "Carne al demiglace con risotto"
+            imagen: null
+          - nombre: "Carne al demiglace con verduras grilladas"
+            imagen: "dafactory_images/c8d26b3bc13f736d.png"
+          - nombre: "Goulash con arroz cremoso"
+            imagen: "dafactory_images/e2f26138ba53fd9d.jpg"
+          - nombre: "Goulash con espinaca gratinada"
+            imagen: "dafactory_images/9acda351f16d4918.jpg"
+          - nombre: "Goulash con pure de calabaza"
+            imagen: "dafactory_images/fdb24c3ad489db63.jpg"
+          - nombre: "Goulash con zanahorias glaseada"
+            imagen: "dafactory_images/c46dee6c55c4f300.jpeg"
+          - nombre: "Guiso de lentejas con carne"
+            imagen: null
+          - nombre: "Hamburguesa a la napolitana con boniatos asados"
+            imagen: null
+          - nombre: "Hamburguesa a la napolitana con pure mixto"
+            imagen: null
+          - nombre: "Hamburguesa de carne magra con pure de calabaza"
+            imagen: null
+          - nombre: "Lasagna de berenjenas al vapor con bolognesa y queso"
+            imagen: "dafactory_images/033944aaf5f90098.jpg"
+          - nombre: "Lasagña de berenjenas al vapor con bolognesa y queso por salut"
+            imagen: "dafactory_images/018fdee7cac66255.jpg"
+          - nombre: "Lasagna de zucchinis al vapor con bolognesa y queso"
+            imagen: "dafactory_images/129f3e4331abaa00.jpg"
+          - nombre: "Matambre a la pizza con espinaca gratinada"
+            imagen: null
+          - nombre: "Matambre a la pizza con pure mixto"
+            imagen: null
+          - nombre: "Milanesa de peceto con pure mixto"
+            imagen: "dafactory_images/b39ad48acf39006d.png"
+          - nombre: "Milanesa de peceto con risotto"
+            imagen: "dafactory_images/b39ad48acf39006d.png"
+          - nombre: "Milanesa napolitana con espinaca gratinada"
+            imagen: "dafactory_images/70bdb67d3a82fbe6.png"
+          - nombre: "Milanesa napolitana con milhojas de papa"
+            imagen: "dafactory_images/931a58b9e5087c5a.jpg"
+          - nombre: "Pastel de calabaza relleno de carne"
+            imagen: "dafactory_images/facab726fc4a535c.png"
+          - nombre: "Pastel de calabaza y zapallitos relleno carne"
+            imagen: "dafactory_images/36b0d0f239351824.png"
+          - nombre: "Pastel de papa y carne"
+            imagen: "dafactory_images/302c89a4455923fe.jpeg"
+          - nombre: "Strogonoff con arroz cremoso"
+            imagen: "dafactory_images/daff8a8702467abd.jpg"
+          - nombre: "Strogonoff con espinaca gratinada"
+            imagen: null
+          - nombre: "Strogonoff con pure de papa"
+            imagen: "dafactory_images/1a3da7d7ad99f565.jpeg"
+          - nombre: "Vacio al horno con pure de papa"
+            imagen: null
+          - nombre: "Vacio al horno con verduras grilladas"
+            imagen: null
+          - nombre: "Zapallitos rellenos"
+            imagen: "dafactory_images/e21b81aff64b4cef.png"
+        "Pollo":
+          - nombre: "Chop suey de pollo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+          - nombre: "Milanesa de pollo con pure mixto"
+            imagen: "dafactory_images/47b988ae5b5854c9.png"
+          - nombre: "Milanesa de pollo con souffle de calabaza"
+            imagen: "dafactory_images/84aaec9e3e5788a0.png"
+          - nombre: "Milanesa de pollo napolitana con chips de calabaza"
+            imagen: "dafactory_images/79c28eb94c320a71.png"
+          - nombre: "Milanesa de pollo napolitana con tortilla de papa"
+            imagen: "dafactory_images/31b93a538f77ef9d.png"
+          - nombre: "Pechuga a la mostaza con de pure mixto"
+            imagen: "dafactory_images/5dc4b84277beca4c.png"
+          - nombre: "Pechuga a la mostaza con de verduras grilladas"
+            imagen: "dafactory_images/292881b644a5c75c.png"
+          - nombre: "Pechuga al champignon con boniatos asados"
+            imagen: null
+          - nombre: "Pechuga al champignon con souffle de brocoli"
+            imagen: null
+          - nombre: "Pechuga al perejil con boniatos asados"
+            imagen: "dafactory_images/c50242302732071f.jpg"
+          - nombre: "Pechuga al puerro con arroz cremoso"
+            imagen: "dafactory_images/6559e72913e15766.jpg"
+          - nombre: "Pechuga al puerro con milhojas de calabaza"
+            imagen: "dafactory_images/f838a19979ff9357.png"
+          - nombre: "Pechuga al verdeo con espinaca gratinada"
+            imagen: "dafactory_images/b99db466b6149c83.jpg"
+          - nombre: "Pechuga con de wok de verduras"
+            imagen: "dafactory_images/3f53939c4888b7a8.png"
+          - nombre: "Pechuga rellena de jamon y queso con arroz cremoso"
+            imagen: null
+          - nombre: "Pechuga rellena de jamon y queso con pure de calabaza"
+            imagen: "dafactory_images/243b31c64b358b39.png"
+          - nombre: "Risotto de pollo"
+            imagen: "dafactory_images/b869af28d6f50e31.png"
+          - nombre: "Wok de pollo"
+            imagen: "dafactory_images/6640e03b90cf8ca1.jpg"
+        "Cerdo":
+          - nombre: "Bondiola a la barbacoa con chips de calabaza"
+            imagen: "dafactory_images/e25fac1e95723bf4.jpeg"
+          - nombre: "Bondiola a la barbacoa con pure de batata"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola a la mostaza con pure de boniato"
+            imagen: "dafactory_images/2009b889de25b1a8.jpeg"
+          - nombre: "Bondiola agridulce con batata y brocoli"
+            imagen: "dafactory_images/75f35dd657d20975.png"
+          - nombre: "Bondiola agridulce con verduras grilladas"
+            imagen: "dafactory_images/bde5ef0a98c74253.jpeg"
+          - nombre: "Bondiola desmenuzada con pure de boniato"
+            imagen: "dafactory_images/e2c9bd24c228e70e.jpeg"
+          - nombre: "Bondiola desmenuzada con souffle de calabaza"
+            imagen: null
+          - nombre: "Carre a la mostaza con de wok de verduras"
+            imagen: "dafactory_images/238705948f8ab439.png"
+          - nombre: "Carre con salsa de ciruela acompanado de manzanas asadas"
+            imagen: null
+          - nombre: "Chop de suey de cerdo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+          - nombre: "Pastel de batata relleno de bondiola desmenuzada"
+            imagen: "dafactory_images/4927b038c580d132.jpeg"
+          - nombre: "Pastel de boniato relleno de bondiola desmenuzada"
+            imagen: "dafactory_images/3957bdb5fff73c01.png"
+        "Pescado":
+          - nombre: "Filet de merluza con de wok de verduras"
+            imagen: "dafactory_images/2cc1be107b1954aa.jpeg"
+          - nombre: "Merluza a la espinaca con pure de boniato"
+            imagen: "dafactory_images/cef7f7df768e2bd3.jpeg"
+          - nombre: "Merluza a napolitana con pure de papa"
+            imagen: null
+          - nombre: "Merluza al roquefort con arroz con brocoli"
+            imagen: "dafactory_images/f14f261a00fa6422.jpeg"
+        "Pastas":
+          - nombre: "Canelon de verdura y ricota con salsa fileto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de carne y verdura con salsa fileto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y carne con filetto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y ricota con fileto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelones de pollo y verdura con salsa fileto"
+            imagen: "dafactory_images/adff3823a3bbba8d.png"
+          - nombre: "Canelones de ricota , jamon y queso con salsa bolognesa"
+            imagen: "dafactory_images/1fba3640b42e8502.jpg"
+          - nombre: "Canelones de ricota y jamon y queso con salsa fileto"
+            imagen: "dafactory_images/57489324948044bc.jpg"
+          - nombre: "Malfatti de calabaza con salsa fileto"
+            imagen: "dafactory_images/1ac06ca59372c5ce.jpg"
+          - nombre: "Malfatti de espinaca con salsa filetto"
+            imagen: "dafactory_images/170a1b6489f6afa9.jpeg"
+          - nombre: "Ñoquis de papa con goulash"
+            imagen: "dafactory_images/e62ad931778b1128.png"
+          - nombre: "Sorrentinos de jamon y queso con salsa bolognesa"
+            imagen: null
+        "Veggie":
+          - nombre: "Budin tricolor (espinaca , ricota y calabaza) acompañado de choclo caramelizado"
+            imagen: null
+          - nombre: "Buñuelos de espinaca"
+            imagen: "dafactory_images/78df10c9ccccc7e5.jpeg"
+          - nombre: "Milanesa de soja al puerro con de espinaca Gratinada"
+            imagen: null
+          - nombre: "Risotto de calabaza y nueces"
+            imagen: null
+          - nombre: "Tortilla de espinaca y champignones"
+            imagen: "dafactory_images/5d460e5fd08168af.jpeg"
+          - nombre: "Tortilla de zapallitos"
+            imagen: "dafactory_images/8304ea0dc4e24ec5.jpeg"
+        "Tartas":
+          - nombre: "Quiche de humita"
+            imagen: null
+          - nombre: "Tarta de atun"
+            imagen: null
+          - nombre: "Tarta de jamon y queso"
+            imagen: "dafactory_images/73980f68c8ff0921.jpg"
+          - nombre: "Tarta de pollo al puerro"
+            imagen: null
+          - nombre: "Tarta de pollo y champignones"
+            imagen: null
+        "Wraps":
+          - nombre: "Quesadilla Funghi: hongos, cebolla y queso"
+            imagen: null
+          - nombre: "Wrapp de bondiola desmenuzada"
+            imagen: null
+          - nombre: "Wrapp de carne desmechada con cebolla y morron"
+            imagen: null
+          - nombre: "Wrapp de carne desmechada y cheddar"
+            imagen: null
+          - nombre: "Wrapp de pollo a la barbacoa"
+            imagen: null
+    - tipo: "Fodmaps"
+      descripcion: "Dieta SIBO"
+      categorias:
+        "Carne":
+          - nombre: "Albóndigas caseras con arroz blanco"
+            imagen: "dafactory_images/a2e1f1bb81e312bd.jpeg"
+          - nombre: "Albóndigas caseras con pure de calabaza"
+            imagen: null
+          - nombre: "Albóndigas caseras con puré mixto de estación"
+            imagen: null
+          - nombre: "Albóndigas caseras con Souffle de calabaza"
+            imagen: null
+          - nombre: "Albóndigas caseras con souffle de espinaca"
+            imagen: "dafactory_images/2c1d42f89928bbcc.png"
+          - nombre: "Albóndigas caseras con vegetales asados"
+            imagen: "dafactory_images/5c0902e5990f76e9.png"
+          - nombre: "Carne al demiglace con pure de papa"
+            imagen: "dafactory_images/135dee462eeb23fc.jpeg"
+          - nombre: "Carne al demiglace con pure mixto"
+            imagen: null
+          - nombre: "Carne al demiglace con souffle de espinaca"
+            imagen: null
+          - nombre: "Carne mechada con espinaca acompanada de pure de zanahoria"
+            imagen: "dafactory_images/7485cd6364dd2768.jpg"
+          - nombre: "Hamburguesa con puré mixto"
+            imagen: null
+          - nombre: "Lasagña de berenjenas al vapor con bolognesa y queso por salut"
+            imagen: "dafactory_images/018fdee7cac66255.jpg"
+          - nombre: "Pastel de calabaza relleno de carne"
+            imagen: "dafactory_images/facab726fc4a535c.png"
+          - nombre: "Pastel de papa y carne"
+            imagen: "dafactory_images/302c89a4455923fe.jpeg"
+          - nombre: "Zapallitos rellenos"
+            imagen: "dafactory_images/e21b81aff64b4cef.png"
+        "Pollo":
+          - nombre: "Pechuga a la plancha con puré mixto"
+            imagen: null
+          - nombre: "Pechuga grillada con boniatos asados"
+            imagen: null
+          - nombre: "Pechuga grillada con souffle de calabaza"
+            imagen: null
+          - nombre: "Pechuga grillada con souffle de espinaca"
+            imagen: null
+          - nombre: "Pechuga grillada con vegetales asados"
+            imagen: null
+          - nombre: "Wok de pollo"
+            imagen: "dafactory_images/2bf320f7e14da740.jpeg"
+        "Cerdo":
+          - nombre: "Bondiola al horno con papa, tomate cherrys y zanahoria"
+            imagen: null
+          - nombre: "Carre con salsa de ciruela acompanado de manzanas asadas"
+            imagen: null
+          - nombre: "Carré grillado con vegetales asados al romero"
+            imagen: null
+        "Pescado":
+          - nombre: "Merluza al horno con puré de calabaza"
+            imagen: "dafactory_images/591227f77ddf8ed7.jpeg"
+          - nombre: "Merluza al horno con pure de papa"
+            imagen: "dafactory_images/cf2387995d601aee.jpeg"
+          - nombre: "Merluza al horno con Timbal de arroz blanco"
+            imagen: "dafactory_images/f14f261a00fa6422.jpeg"
+          - nombre: "Merluza con souffle de espinaca"
+            imagen: null
+        "Pastas":
+          - nombre: "Canelón de calabaza y nuez con filetto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelón de espinaca y pollo con filetto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelones de carne y verdura con salsa fileto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y carne con filetto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y ricota con fileto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+        "Veggie":
+          - nombre: "Souffle de calabaza"
+            imagen: "dafactory_images/10c8a7d325fab3d5.png"
+          - nombre: "Souffle de espinaca"
+            imagen: "dafactory_images/5d460e5fd08168af.jpeg"
+          - nombre: "Soufflé de espinaca con pure calabaza"
+            imagen: null
+    - tipo: "Keto"
+      descripcion: "Bajo en carbos"
+      categorias:
+        "Carne":
+          - nombre: "Ajies rellenos de carne magra y queso"
+            imagen: "dafactory_images/2af67c1e2f075fba.jpg"
+          - nombre: "Albondigas con salsa fileto acompanadas de espinaca gratinada"
+            imagen: "dafactory_images/af1351b36ab6dec8.png"
+          - nombre: "Albondigas de carne magra con de souffle de espinaca"
+            imagen: "dafactory_images/a95fc86a2be0c2f7.png"
+          - nombre: "Albondigas salseadas con mostaza acompanadas de brocoli y pure de coliflor"
+            imagen: null
+          - nombre: "Carne a la mostaza con de verduras grilladas"
+            imagen: null
+          - nombre: "Carne a la mostaza con souffle de espinaca"
+            imagen: null
+          - nombre: "Carne al champignon con de souffle de brocoli"
+            imagen: "dafactory_images/8083bc15ad8624eb.png"
+          - nombre: "Carne al champignon con tortilla de espinaca"
+            imagen: null
+          - nombre: "Carne al demiglace con chips de Berenjena y zucchini"
+            imagen: null
+          - nombre: "Carne al demiglace con espinaca gratinada"
+            imagen: null
+          - nombre: "Carne mechada de espinaca con de pure de coliflor"
+            imagen: null
+          - nombre: "Goulash con espinaca gratinada"
+            imagen: "dafactory_images/9acda351f16d4918.jpg"
+          - nombre: "Hamburguesa con puré mixto"
+            imagen: null
+          - nombre: "Lasagna de berenjenas al vapor con bolognesa y queso"
+            imagen: "dafactory_images/033944aaf5f90098.jpg"
+          - nombre: "Lasagña de berenjenas al vapor con bolognesa y queso por salut"
+            imagen: "dafactory_images/018fdee7cac66255.jpg"
+          - nombre: "Lasagna de zucchinis al vapor con bolognesa y queso"
+            imagen: "dafactory_images/129f3e4331abaa00.jpg"
+          - nombre: "Pastel de carne y coliflor"
+            imagen: "dafactory_images/302c89a4455923fe.jpeg"
+          - nombre: "Wok de carne"
+            imagen: "dafactory_images/d47c662985903072.jpg"
+          - nombre: "Zapallitos rellenos"
+            imagen: "dafactory_images/e21b81aff64b4cef.png"
+        "Pollo":
+          - nombre: "Brochetes de pollo, panceta y vegetales"
+            imagen: null
+          - nombre: "Pechuga a la mostaza con repollo al curry"
+            imagen: null
+          - nombre: "Pechuga a la mostaza con souffle de espinaca"
+            imagen: null
+          - nombre: "Pechuga al champignon con pure de coliflor"
+            imagen: null
+          - nombre: "Pechuga al champignon con souffle de brocoli"
+            imagen: null
+          - nombre: "Pechuga al verdeo con espinaca gratinada"
+            imagen: "dafactory_images/b99db466b6149c83.jpg"
+          - nombre: "Pechuga rellena de jamon y queso con de verduras grilladas"
+            imagen: "dafactory_images/f7b2d5c412b69ed2.png"
+          - nombre: "Wok de pollo"
+            imagen: "dafactory_images/6640e03b90cf8ca1.jpg"
+        "Cerdo":
+          - nombre: "Bondiola a la mostaza con chips de berenjena y zucchini"
+            imagen: null
+          - nombre: "Bondiola al roquefort con souffle de brocoli"
+            imagen: null
+          - nombre: "Bondiola al verdeo con espinaca gratinada"
+            imagen: null
+          - nombre: "Bondiola braseada con pure de coliflor"
+            imagen: "dafactory_images/e2c9bd24c228e70e.jpeg"
+          - nombre: "Carre a la mostaza con de wok de verduras"
+            imagen: "dafactory_images/238705948f8ab439.png"
+          - nombre: "Carre de cerdo al champignon con pure de coliflor"
+            imagen: "dafactory_images/c6eac2f892b77da1.png"
+          - nombre: "Chop de suey de cerdo"
+            imagen: "dafactory_images/e255580e9f6a3cdd.jpeg"
+        "Pescado":
+          - nombre: "Filet de merluza a la napolitana con brocoli"
+            imagen: null
+          - nombre: "Filet de merluza al perejil con wok de vegetales"
+            imagen: "dafactory_images/f4d51ea221f7b0c8.jpg"
+          - nombre: "Filet de merluza con de espinaca gratinada"
+            imagen: "dafactory_images/f4d51ea221f7b0c8.jpg"
+          - nombre: "Filet de merluza salseado con queso azul y pure de coliflor"
+            imagen: "dafactory_images/591227f77ddf8ed7.jpeg"
+        "Pastas":
+          - nombre: "Canelon de verdura y ricota con salsa fileto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de carne y verdura con salsa fileto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y carne con filetto"
+            imagen: "dafactory_images/32915656ae1d0929.jpeg"
+          - nombre: "Canelones de espinaca y ricota con fileto"
+            imagen: "dafactory_images/0798f078f8932b79.jpeg"
+          - nombre: "Canelones de pollo y verdura con salsa fileto"
+            imagen: "dafactory_images/adff3823a3bbba8d.png"
+          - nombre: "Canelones de ricota y jamon y queso con salsa fileto"
+            imagen: "dafactory_images/57489324948044bc.jpg"
+        "Tartas":
+          - nombre: "Tarta capresse"
+            imagen: null
+          - nombre: "Tarta de brócoli y queso azul"
+            imagen: null
+          - nombre: "Tarta de espinaca y queso"
+            imagen: null
+          - nombre: "Tarta de jamon y queso"
+            imagen: null
+          - nombre: "Tarta de pollo y puerro"
+            imagen: null
+    - tipo: "Menú Kids"
+      descripcion: "Para los más chicos"
+      categorias:
+        "Pollo":
+          - nombre: "Chicken fingers al horno con puré de papa y zanahoria"
+            imagen: null
+          - nombre: "Croquetas de pollo al horno con brócoli al vapor"
+            imagen: null
+          - nombre: "Croquetas de pollo al horno con puré de papas"
+            imagen: null
+          - nombre: "Croquetas de pollo al horno con puré mixto"
+            imagen: null
+          - nombre: "Hamburguesa casera de pollo con arroz cremoso"
+            imagen: null
+          - nombre: "Milanesa de pollo al horno con puré de calabaza"
+            imagen: null
+          - nombre: "Milanesa de pollo con soufflé de calabaza y choclo"
+            imagen: null
+          - nombre: "Pollo a la mostaza suave con puré de papas"
+            imagen: null
+        "Carne":
+          - nombre: "Albóndigas de carne en salsa suave con arroz blanco"
+            imagen: null
+          - nombre: "Carne al horno con puré mixto y choclo"
+            imagen: null
+          - nombre: "Carne al horno con soufflé de calabaza"
+            imagen: null
+          - nombre: "Goulash de carne con puré de papas"
+            imagen: null
+          - nombre: "Hamburguesa casera de carne con puré de papas"
+            imagen: null
+          - nombre: "Milanesa de carne con puré de papa"
+            imagen: null
+          - nombre: "Pastel de papa con carne desmenuzada"
+            imagen: null
+        "Pescado":
+          - nombre: "Formitas de merluza al horno con brócoli al vapor"
+            imagen: null
+          - nombre: "Formitas de merluza al horno con calabazas rústicas"
+            imagen: null
+          - nombre: "Formitas de merluza al horno con puré de papas"
+            imagen: null
+          - nombre: "Merluza al horno con puré mixto"
+            imagen: null
+        "Pastas":
+          - nombre: "Canelones de pollo y verduras con salsa suave"
+            imagen: null
+          - nombre: "Canelones de ricota y espinaca con salsa mixta"
+            imagen: null
+          - nombre: "Fettuccini con crema suave"
+            imagen: null
+          - nombre: "Ñoquis con salsa de tomate y queso"
+            imagen: null
+        "Tartas":
+          - nombre: "Tarta caprese con verduritas al horno"
+            imagen: null
+          - nombre: "Tarta de calabaza y espinaca con puré de papas"
+            imagen: null
+          - nombre: "Tarta de jamón y queso con puré de papas"
+            imagen: null
+          - nombre: "Tarta de pollo con arroz blanco"
+            imagen: null

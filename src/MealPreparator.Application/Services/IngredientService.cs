@@ -43,7 +43,11 @@ public sealed class IngredientService
             throw new ConflictException($"An ingredient named '{name}' already exists.");
         }
 
-        var ingredient = new Ingredient(name, request.Unit, request.ImageUrl);
+        var ingredient = new Ingredient(name, request.Unit, request.ImageUrl, request.IsBinary);
+        if (request.UnitConversions is not null)
+        {
+            ingredient.SetUnitConversions(ToConversions(request.UnitConversions));
+        }
         await _ingredients.AddAsync(ingredient, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -65,8 +69,17 @@ public sealed class IngredientService
             throw new ConflictException($"An ingredient named '{name}' already exists.");
         }
 
-        ingredient.Update(name, request.Unit);
+        var previousUnit = ingredient.Unit;
+        ingredient.Update(name, request.Unit, request.IsBinary);
         ingredient.SetImageUrl(request.ImageUrl);
+        if (request.UnitConversions is not null)
+        {
+            ingredient.SetUnitConversions(ToConversions(request.UnitConversions));
+        }
+        else if (ingredient.IsBinary || previousUnit != ingredient.Unit)
+        {
+            ingredient.SetUnitConversions([]);
+        }
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ingredient.ToDto();
@@ -89,5 +102,15 @@ public sealed class IngredientService
     {
         return await _ingredients.GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException($"Ingredient with id {id} was not found.");
+    }
+
+    private static IReadOnlyList<IngredientUnitConversion> ToConversions(
+        IReadOnlyList<IngredientUnitConversionInput> inputs)
+    {
+        return inputs.Select(input => new IngredientUnitConversion(
+            input.Unit,
+            input.Factor,
+            input.Source,
+            input.Note)).ToList();
     }
 }

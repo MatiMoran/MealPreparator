@@ -143,7 +143,16 @@ generateBtn.addEventListener('click', async () => {
         else {
             for (const item of data) {
                 const div = document.createElement('div'); div.className = 'modal__item';
-                div.innerHTML = `<span class="modal__item-name">${item.ingredientName}</span><span class="modal__item-qty">${formatIngredientAmount(item)}</span>`;
+                div.innerHTML = `<span class="modal__item-name">${item.ingredientName}</span>`;
+                const amount = document.createElement('span'); amount.className = 'modal__item-qty';
+                if (item.isBinary) {
+                    const present = document.createElement('input'); present.type = 'checkbox'; present.checked = true; present.disabled = true;
+                    present.setAttribute('aria-label', item.ingredientName);
+                    amount.appendChild(present);
+                } else {
+                    amount.textContent = `${item.quantity} ${item.unitDisplay}`;
+                }
+                div.appendChild(amount);
                 modalBody.appendChild(div);
             }
         }
@@ -159,7 +168,9 @@ generateBtn.addEventListener('click', async () => {
 modalCopy.addEventListener('click', async () => {
     if (!lastShoppingList || lastShoppingList.length === 0) return;
     const max = Math.max(...lastShoppingList.map(i => (i.ingredientName||'').length), 0);
-    const text = lastShoppingList.map(i => `${(i.ingredientName||'').padEnd(max+2)}${formatIngredientAmount(i)}`).join('\n');
+    const text = lastShoppingList
+        .map(i => `${(i.ingredientName || '').padEnd(max + 2)}${i.isBinary ? '' : `${i.quantity} ${i.unitDisplay}`}`.trimEnd())
+        .join('\n');
     try {
         await navigator.clipboard.writeText(text);
         modalCopyFeedback.textContent = '¡Copiado!';
@@ -214,7 +225,7 @@ function renderGestorIngredients() {
     gestorIngredients.innerHTML = '';
     for (const ing of ingredients) {
         const div = document.createElement('div'); div.className = 'gestor__item';
-        div.innerHTML = `<img class="gestor__item-img" src="${ing.imageUrl?(ing.imageUrl.startsWith('http')?ing.imageUrl:API_BASE+'/'+ing.imageUrl):'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'"><div class="gestor__item-info"><span class="gestor__item-name">${ing.name}</span><span class="gestor__item-meta">${ing.unitDisplay || ing.unit}</span></div><div class="gestor__item-actions"><button class="gestor__action" data-act="edit" data-id="${ing.id}">Editar</button><button class="gestor__action gestor__action--danger" data-act="del" data-id="${ing.id}">Eliminar</button></div>`;
+        div.innerHTML = `<img class="gestor__item-img" src="${ing.imageUrl?(ing.imageUrl.startsWith('http')?ing.imageUrl:API_BASE+'/'+ing.imageUrl):'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'"><div class="gestor__item-info"><span class="gestor__item-name">${ing.name}</span></div><div class="gestor__item-actions"><button class="gestor__action" data-act="edit" data-id="${ing.id}">Editar</button><button class="gestor__action gestor__action--danger" data-act="del" data-id="${ing.id}">Eliminar</button></div>`;
         gestorIngredients.appendChild(div);
     }
     gestorIngredients.querySelectorAll('button').forEach(b => b.addEventListener('click', async ()=>{
@@ -291,7 +302,7 @@ function openRecipeModal(detail) {
     recipeIngList.innerHTML = '';
     if (detail?.ingredients) {
         for (const ing of detail.ingredients) {
-            addRecipeIngRow({ ingredientId: ing.ingredientId, quantity: ing.quantity, unit: ing.unit });
+            addRecipeIngRow({ ingredientId: ing.ingredientId, quantity: ing.quantity, unit: ing.unit, isBinary: ing.isBinary });
         }
     } else {
         addRecipeIngRow({});
@@ -302,33 +313,41 @@ function openRecipeModal(detail) {
 function addRecipeIngRow(data) {
     const row = document.createElement('div'); row.className = 'recipe-ing-row';
     const sel = document.createElement('select'); sel.className = 'form__input';
-    sel.innerHTML = '<option value="">Seleccionar ingrediente</option>' + ingredients.map(i=>`<option value="${i.id}" data-unit="${i.unit}">${i.name}</option>`).join('');
+    sel.innerHTML = '<option value="">Seleccionar ingrediente</option>' + ingredients.map(i=>`<option value="${i.id}" data-binary="${i.isBinary}">${i.name}</option>`).join('');
     if (data.ingredientId) sel.value = data.ingredientId;
     const qty = document.createElement('input'); qty.className = 'form__input'; qty.type='number'; qty.min='0'; qty.step='0.01'; qty.value = data.quantity || '';
-    const presenceLabel = document.createElement('label'); presenceLabel.className = 'recipe-ing-presence';
-    const presence = document.createElement('input'); presence.type = 'checkbox'; presence.checked = Number(data.quantity) > 0;
-    presenceLabel.append(presence, document.createTextNode(' Está'));
-    const unit = document.createElement('span'); unit.className = 'recipe-ing-unit'; unit.textContent = data.unit ? unitDisplay(data.unit) : '';
-    const updateQuantityInput = (unitName) => {
-        const isBinary = isBinaryUnit(unitName);
-        qty.style.display = isBinary ? 'none' : '';
-        presenceLabel.style.display = isBinary ? 'inline-flex' : 'none';
-        unit.textContent = unitName ? unitDisplay(unitName) : '';
+    const presence = document.createElement('input'); presence.type = 'checkbox'; presence.className = 'recipe-ing-presence';
+    presence.checked = data.isBinary === true;
+    const unit = document.createElement('select'); unit.className = 'form__input recipe-ing-unit';
+    const selectedIngredient = () => ingredients.find(i => String(i.id) === sel.value);
+    const updateUnitOptions = (selectedUnit) => {
+        const ing = selectedIngredient();
+        const units = ing && !ing.isBinary
+            ? [...new Set([ing.unit, ...(ing.unitConversions || []).map(conversion => conversion.unit)].filter(Boolean))]
+            : [];
+        unit.innerHTML = units.map(value => `<option value="${value}">${unitDisplay(value)}</option>`).join('');
+        if (selectedUnit && units.includes(selectedUnit)) unit.value = selectedUnit;
+        else if (ing?.unit) unit.value = ing.unit;
     };
-    sel.addEventListener('change', ()=>{ const opt = sel.options[sel.selectedIndex]; updateQuantityInput(opt.dataset.unit); });
-    updateQuantityInput(data.unit || sel.options[sel.selectedIndex]?.dataset.unit);
+    const updateQuantityInput = (isBinary, selectedUnit) => {
+        updateUnitOptions(selectedUnit);
+        qty.style.display = isBinary ? 'none' : '';
+        presence.style.display = isBinary ? 'inline-block' : 'none';
+        unit.style.display = isBinary ? 'none' : '';
+    };
+    sel.addEventListener('change', ()=>{ const opt = sel.options[sel.selectedIndex]; updateQuantityInput(opt.dataset.binary === 'true'); presence.checked = false; });
+    const selectedOption = sel.options[sel.selectedIndex];
+    updateQuantityInput(data.isBinary === true || selectedOption?.dataset.binary === 'true', data.unit);
     const rm = document.createElement('button'); rm.className='form__link'; rm.textContent='Quitar';
     rm.addEventListener('click', ()=>{ row.remove(); recipeIngRows = recipeIngRows.filter(x=>x.row!==row); });
-    row.appendChild(sel); row.appendChild(qty); row.appendChild(presenceLabel); row.appendChild(unit); row.appendChild(rm);
+    row.appendChild(sel); row.appendChild(qty); row.appendChild(presence); row.appendChild(unit); row.appendChild(rm);
     recipeIngList.appendChild(row);
     recipeIngRows.push({ row, sel, qty, presence, unit });
 }
 
 btnAddRecipeIng.addEventListener('click', ()=>addRecipeIngRow({}));
 
-function isBinaryUnit(unit){ return unit === 'Binary'; }
-function unitDisplay(u){ const map={'Gram':'g','Milliliter':'ml','Unit':'unidad','Tablespoon':'cucharada','Teaspoon':'cucharadita','Binary':'presente'}; if(u==='Unit') return 'unidad'; return map[u]||u; }
-function formatIngredientAmount(item){ return isBinaryUnit(item.unit) ? item.unitDisplay : `${item.quantity} ${item.unitDisplay}`; }
+function unitDisplay(u){ const map={'Gram':'g','Kilogram':'kg','Milliliter':'ml','Liter':'l','Piece':'unidad','Tablespoon':'cucharada','Teaspoon':'cucharadita','Cup':'taza'}; return map[u]||u; }
 
 btnNewIngInline.addEventListener('click', ()=>{ openInlineIngModal(); });
 
@@ -336,10 +355,10 @@ recipeSave.addEventListener('click', async ()=>{
     const items = [];
     for (const r of recipeIngRows) {
         const id = r.sel.value ? parseInt(r.sel.value) : null;
-        const unit = r.sel.options[r.sel.selectedIndex]?.dataset.unit;
-        if (id && isBinaryUnit(unit) && r.presence.checked) items.push({ ingredientId: id, quantity: 1 });
+        const isBinary = r.sel.options[r.sel.selectedIndex]?.dataset.binary === 'true';
+        if (id && isBinary && r.presence.checked) items.push({ ingredientId: id, quantity: null });
         const q = parseFloat(r.qty.value);
-        if (id && !isBinaryUnit(unit) && q > 0) items.push({ ingredientId: id, quantity: q });
+        if (id && !isBinary && q > 0) items.push({ ingredientId: id, quantity: q, unit: r.unit.value });
     }
     if (items.length === 0) { alert('Agregá al menos un ingrediente'); return; }
     const img = recipeImageUploaded || (recipeImageUrl.value.startsWith('http') ? recipeImageUrl.value : recipeImageUrl.value || null);
@@ -361,6 +380,11 @@ const ingredientModalTitle = document.getElementById('ingredient-modal-title');
 const ingredientIdEl = document.getElementById('ingredient-id');
 const ingredientName = document.getElementById('ingredient-name');
 const ingredientUnit = document.getElementById('ingredient-unit');
+const ingredientBinary = document.getElementById('ingredient-binary');
+const ingredientConversionsRow = document.getElementById('ingredient-conversions-row');
+const ingredientConversions = document.getElementById('ingredient-conversions');
+const ingredientConversionsHint = document.getElementById('ingredient-conversions-hint');
+const ingredientConversionAdd = document.getElementById('ingredient-conversion-add');
 const ingredientImageDrop = document.getElementById('ingredient-image-drop');
 const ingredientImageFile = document.getElementById('ingredient-image-file');
 const ingredientImageUrl = document.getElementById('ingredient-image-url');
@@ -370,9 +394,46 @@ const ingredientCancel = document.getElementById('ingredient-cancel');
 let ingImageUploaded = '';
 
 const unitOptions = [
-    {v:'Gram',t:'gramo (g)'},{v:'Milliliter',t:'mililitro (ml)'},{v:'Unit',t:'unidad/unidades'},{v:'Tablespoon',t:'cucharada/s'},{v:'Teaspoon',t:'cucharadita/s'},{v:'Binary',t:'presente o ausente'}
+    {v:'Piece',t:'unidad'},{v:'Gram',t:'gramo (g)'},{v:'Kilogram',t:'kilogramo (kg)'},{v:'Milliliter',t:'mililitro (ml)'},{v:'Liter',t:'litro (l)'},{v:'Tablespoon',t:'cucharada'},{v:'Teaspoon',t:'cucharadita'},{v:'Cup',t:'taza'}
 ];
 ingredientUnit.innerHTML = unitOptions.map(o=>`<option value="${o.v}">${o.t}</option>`).join('');
+function addIngredientConversionRow(conversion = {}) {
+    const row = document.createElement('div'); row.className = 'unit-conversion-row';
+    const unit = document.createElement('select'); unit.className = 'form__input conversion-unit';
+    const fillUnits = () => {
+        const current = unit.value || conversion.unit;
+        unit.innerHTML = unitOptions.filter(option => option.v !== ingredientUnit.value)
+            .map(option => `<option value="${option.v}">${option.t}</option>`).join('');
+        if (current && [...unit.options].some(option => option.value === current)) unit.value = current;
+    };
+    const factor = document.createElement('input'); factor.className = 'form__input conversion-factor'; factor.type = 'number'; factor.min = '0'; factor.step = 'any'; factor.placeholder = 'Factor'; factor.value = conversion.factor ?? '';
+    const source = document.createElement('input'); source.className = 'form__input conversion-source'; source.type = 'url'; source.placeholder = 'Fuente (URL)'; source.value = conversion.source || '';
+    const note = document.createElement('input'); note.className = 'form__input conversion-note'; note.type = 'text'; note.placeholder = 'Nota (porción/estado)'; note.value = conversion.note || '';
+    const remove = document.createElement('button'); remove.className = 'form__link'; remove.type = 'button'; remove.textContent = 'Quitar'; remove.addEventListener('click', () => row.remove());
+    row.append(unit, factor, source, note, remove); ingredientConversions.appendChild(row); fillUnits();
+}
+function renderIngredientConversions(conversions = []) {
+    ingredientConversions.innerHTML = '';
+    const baseUnitName = unitOptions.find(option => option.v === ingredientUnit.value)?.t || ingredientUnit.value;
+    ingredientConversionsHint.textContent = `El factor indica cuántas unidades base (${baseUnitName}) equivale 1 unidad alternativa.`;
+    for (const conversion of conversions) {
+        if (conversion.unit !== ingredientUnit.value) addIngredientConversionRow(conversion);
+    }
+}
+function readIngredientConversions() {
+    return [...ingredientConversions.querySelectorAll('.unit-conversion-row')].map(row => ({
+        unit: row.querySelector('.conversion-unit').value,
+        factor: parseFloat(row.querySelector('.conversion-factor').value),
+        source: row.querySelector('.conversion-source').value || null,
+        note: row.querySelector('.conversion-note').value || null
+    }));
+}
+ingredientConversionAdd.addEventListener('click', () => addIngredientConversionRow());
+ingredientUnit.addEventListener('change', () => renderIngredientConversions(readIngredientConversions()));
+ingredientBinary.addEventListener('change', ()=>{
+    ingredientUnit.disabled = ingredientBinary.checked;
+    ingredientConversionsRow.style.display = ingredientBinary.checked ? 'none' : '';
+});
 
 ingredientModalBackdrop.addEventListener('click', closeIngredientModal);
 ingredientModalClose.addEventListener('click', closeIngredientModal);
@@ -404,6 +465,10 @@ function openIngredientModal(detail) {
     ingredientModalTitle.textContent = detail ? 'Editar ingrediente' : 'Nuevo ingrediente';
     ingredientName.value = detail?.name || '';
     ingredientUnit.value = detail?.unit || 'Gram';
+    ingredientBinary.checked = detail?.isBinary || false;
+    ingredientUnit.disabled = ingredientBinary.checked;
+    ingredientConversionsRow.style.display = ingredientBinary.checked ? 'none' : '';
+    renderIngredientConversions(detail?.unitConversions || []);
     ingImageUploaded = detail?.imageUrl || '';
     ingredientImageUrl.value = detail?.imageUrl && detail.imageUrl.startsWith('http') ? detail.imageUrl : '';
     if (ingImageUploaded) { ingredientImagePreview.src = ingImageUploaded.startsWith('http') ? ingImageUploaded : API_BASE + '/' + ingImageUploaded; ingredientImagePreview.style.display = 'block'; } else ingredientImagePreview.style.display = 'none';
@@ -412,7 +477,7 @@ function openIngredientModal(detail) {
 
 ingredientSave.addEventListener('click', async ()=>{
     const img = ingImageUploaded || (ingredientImageUrl.value.startsWith('http') ? ingredientImageUrl.value : ingredientImageUrl.value || null);
-    const payload = { name: ingredientName.value, unit: ingredientUnit.value, imageUrl: img };
+    const payload = { name: ingredientName.value, unit: ingredientBinary.checked ? null : ingredientUnit.value, isBinary: ingredientBinary.checked, imageUrl: img, unitConversions: ingredientBinary.checked ? [] : readIngredientConversions() };
     try {
         let res;
         if (ingredientIdEl.value) res = await fetch(`${API_BASE}/api/ingredients/${ingredientIdEl.value}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
@@ -428,17 +493,19 @@ const inlineIngBackdrop = document.getElementById('inline-ing-backdrop');
 const inlineIngClose = document.getElementById('inline-ing-close');
 const inlineIngName = document.getElementById('inline-ing-name');
 const inlineIngUnit = document.getElementById('inline-ing-unit');
+const inlineIngBinary = document.getElementById('inline-ing-binary');
 const inlineIngUrl = document.getElementById('inline-ing-url');
 const inlineIngSave = document.getElementById('inline-ing-save');
 const inlineIngCancel = document.getElementById('inline-ing-cancel');
 inlineIngUnit.innerHTML = unitOptions.map(o=>`<option value="${o.v}">${o.t}</option>`).join('');
+inlineIngBinary.addEventListener('change', ()=>{ inlineIngUnit.disabled = inlineIngBinary.checked; });
 inlineIngBackdrop.addEventListener('click', closeInlineModal);
 inlineIngClose.addEventListener('click', closeInlineModal);
 inlineIngCancel.addEventListener('click', closeInlineModal);
 function closeInlineModal(){ inlineIngModal.classList.remove('active'); document.body.style.overflow=''; }
-function openInlineIngModal(){ inlineIngName.value=''; inlineIngUrl.value=''; inlineIngModal.classList.add('active'); document.body.style.overflow='hidden'; }
+function openInlineIngModal(){ inlineIngName.value=''; inlineIngUrl.value=''; inlineIngBinary.checked=false; inlineIngUnit.disabled=false; inlineIngModal.classList.add('active'); document.body.style.overflow='hidden'; }
 inlineIngSave.addEventListener('click', async ()=>{
-    const payload = { name: inlineIngName.value, unit: inlineIngUnit.value, imageUrl: inlineIngUrl.value || null };
+    const payload = { name: inlineIngName.value, unit: inlineIngBinary.checked ? null : inlineIngUnit.value, isBinary: inlineIngBinary.checked, imageUrl: inlineIngUrl.value || null };
     try {
         const res = await fetch(`${API_BASE}/api/ingredients`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
         if (!res.ok) { const t=await res.text(); alert(t); return; }
@@ -450,7 +517,7 @@ inlineIngSave.addEventListener('click', async ()=>{
         addRecipeIngRow({ ingredientId: ing.id });
         // select last
         const last = recipeIngRows[recipeIngRows.length-1];
-        if (last) { last.sel.value = ing.id; const opt = last.sel.options[last.sel.selectedIndex]; last.unit.textContent = opt.dataset.unit ? unitDisplay(opt.dataset.unit) : unitDisplay(ing.unit); }
+        if (last) { last.sel.value = ing.id; last.sel.dispatchEvent(new Event('change')); }
     } catch(e) { alert('Error'); }
 });
 

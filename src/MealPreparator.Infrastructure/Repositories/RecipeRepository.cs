@@ -28,6 +28,7 @@ public sealed class RecipeRepository : IRecipeRepository
         return _dbContext.Recipes
             .Include(recipe => recipe.Ingredients)
             .ThenInclude(recipeIngredient => recipeIngredient.Ingredient)
+            .ThenInclude(ingredient => ingredient.UnitConversions)
             .FirstOrDefaultAsync(recipe => recipe.Id == id, cancellationToken);
     }
 
@@ -39,6 +40,7 @@ public sealed class RecipeRepository : IRecipeRepository
             .AsNoTracking()
             .Include(recipe => recipe.Ingredients)
             .ThenInclude(recipeIngredient => recipeIngredient.Ingredient)
+            .ThenInclude(ingredient => ingredient.UnitConversions)
             .Where(recipe => ids.Contains(recipe.Id))
             .ToListAsync(cancellationToken);
     }

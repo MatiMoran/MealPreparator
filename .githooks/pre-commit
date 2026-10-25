@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+run_checks() {
+    dotnet build MealPreparator.slnx
+    dotnet test tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj --no-build
+}
+
+if command -v dotnet >/dev/null 2>&1 && dotnet --version >/dev/null 2>&1; then
+    run_checks
+elif command -v nix-shell >/dev/null 2>&1; then
+    if nix-shell -p dotnet-sdk_10 --run \
+        'dotnet build MealPreparator.slnx && dotnet test tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj --no-build'; then
+        exit 0
+    else
+        status=$?
+        printf '%s\n' 'Pre-commit could not complete in nix-shell. Review the error above; it may be a Nix access problem or a build/test failure.' >&2
+        exit "$status"
+    fi
+else
+    printf '%s\n' 'Pre-commit requires .NET SDK 10 or nix-shell. Install .NET 10 or install Nix with nix-shell available.' >&2
+    exit 127
+fi
