@@ -8,12 +8,12 @@ public static class MappingExtensions
 {
     public static IngredientDto ToDto(this Ingredient ingredient)
     {
-        return new IngredientDto(ingredient.Id, ingredient.Name, ingredient.Unit);
+        return new IngredientDto(ingredient.Id, ingredient.Name, ingredient.Unit, ingredient.ImageUrl);
     }
 
     public static RecipeSummaryDto ToSummaryDto(this Recipe recipe)
     {
-        return new RecipeSummaryDto(recipe.Id, recipe.Name, recipe.Servings);
+        return new RecipeSummaryDto(recipe.Id, recipe.Name, recipe.Servings, recipe.ImageUrl);
     }
 
     public static RecipeDto ToDto(this Recipe recipe)
@@ -23,6 +23,7 @@ public static class MappingExtensions
                 recipeIngredient.IngredientId,
                 recipeIngredient.Ingredient.Name,
                 recipeIngredient.Ingredient.Unit,
+                recipeIngredient.Ingredient.Unit.ToSpanishDisplay(recipeIngredient.Quantity),
                 recipeIngredient.Quantity))
             .OrderBy(ingredient => ingredient.IngredientName, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -32,15 +33,18 @@ public static class MappingExtensions
             recipe.Name,
             recipe.Servings,
             recipe.Instructions,
+            recipe.ImageUrl,
             ingredients);
     }
 
     public static ShoppingListItemDto ToDto(this ShoppingListEntry entry)
     {
+        var quantity = Math.Round(entry.TotalQuantity, 2, MidpointRounding.AwayFromZero);
         return new ShoppingListItemDto(
             entry.IngredientId,
             entry.IngredientName,
             entry.Unit,
-            Math.Round(entry.TotalQuantity, 2, MidpointRounding.AwayFromZero));
+            entry.Unit.ToSpanishDisplay(quantity),
+            quantity);
     }
 }

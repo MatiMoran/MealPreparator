@@ -14,15 +14,18 @@ public sealed class Recipe
 
     public string? Instructions { get; private set; }
 
+    public string? ImageUrl { get; private set; }
+
     public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients;
 
     private Recipe()
     {
     }
 
-    public Recipe(string name, int servings, string? instructions)
+    public Recipe(string name, int servings, string? instructions, string? imageUrl = null)
     {
         UpdateDetails(name, servings, instructions);
+        SetImageUrl(imageUrl);
     }
 
     public void UpdateDetails(string name, int servings, string? instructions)
@@ -52,6 +55,24 @@ public sealed class Recipe
         Name = trimmedName;
         Servings = servings;
         Instructions = string.IsNullOrWhiteSpace(instructions) ? null : instructions.Trim();
+    }
+
+    public void SetImageUrl(string? imageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+        {
+            ImageUrl = null;
+            return;
+        }
+
+        var trimmed = imageUrl.Trim();
+
+        if (trimmed.Length > 500)
+        {
+            throw new DomainValidationException("Recipe image URL cannot exceed 500 characters.");
+        }
+
+        ImageUrl = trimmed;
     }
 
     public void ReplaceIngredients(IEnumerable<RecipeIngredient> ingredients)

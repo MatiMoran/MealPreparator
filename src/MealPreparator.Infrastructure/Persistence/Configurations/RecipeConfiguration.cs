@@ -23,6 +23,9 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
         builder.Property(recipe => recipe.Instructions)
             .HasMaxLength(4000);
 
+        builder.Property(recipe => recipe.ImageUrl)
+            .HasMaxLength(500);
+
         builder.HasMany(recipe => recipe.Ingredients)
             .WithOne(recipeIngredient => recipeIngredient.Recipe)
             .HasForeignKey(recipeIngredient => recipeIngredient.RecipeId)

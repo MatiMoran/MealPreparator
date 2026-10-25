@@ -43,7 +43,7 @@ public sealed class IngredientService
             throw new ConflictException($"An ingredient named '{name}' already exists.");
         }
 
-        var ingredient = new Ingredient(name, request.Unit);
+        var ingredient = new Ingredient(name, request.Unit, request.ImageUrl);
         await _ingredients.AddAsync(ingredient, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -66,6 +66,7 @@ public sealed class IngredientService
         }
 
         ingredient.Update(name, request.Unit);
+        ingredient.SetImageUrl(request.ImageUrl);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ingredient.ToDto();

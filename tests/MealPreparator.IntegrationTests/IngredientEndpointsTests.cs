@@ -59,7 +59,7 @@ public sealed class IngredientEndpointsTests : IClassFixture<MealPreparatorApiFa
 
         var response = await _client.PostAsJsonAsync(
             "/api/ingredients",
-            new CreateIngredientRequest(name.ToUpperInvariant(), UnitOfMeasure.Piece),
+            new CreateIngredientRequest(name.ToUpperInvariant(), UnitOfMeasure.Piece, null),
             IntegrationTestHelpers.JsonOptions);
 
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -70,7 +70,7 @@ public sealed class IngredientEndpointsTests : IClassFixture<MealPreparatorApiFa
     {
         var response = await _client.PostAsJsonAsync(
             "/api/ingredients",
-            new CreateIngredientRequest("   ", UnitOfMeasure.Piece),
+            new CreateIngredientRequest("   ", UnitOfMeasure.Piece, null),
             IntegrationTestHelpers.JsonOptions);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

@@ -18,11 +18,12 @@ internal static class IntegrationTestHelpers
     public static async Task<IngredientDto> CreateIngredientAsync(
         HttpClient client,
         string name,
-        UnitOfMeasure unit)
+        UnitOfMeasure unit,
+        string? imageUrl = null)
     {
         var response = await client.PostAsJsonAsync(
             "/api/ingredients",
-            new CreateIngredientRequest(name, unit),
+            new CreateIngredientRequest(name, unit, imageUrl),
             JsonOptions);
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -41,6 +42,7 @@ internal static class IntegrationTestHelpers
             name,
             servings,
             instructions,
+            null,
             ingredients
                 .Select(item => new RecipeIngredientRequest(item.IngredientId, item.Quantity))
                 .ToList());

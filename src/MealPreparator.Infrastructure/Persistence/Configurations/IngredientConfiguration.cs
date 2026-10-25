@@ -24,5 +24,8 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(32);
+
+        builder.Property(ingredient => ingredient.ImageUrl)
+            .HasMaxLength(500);
     }
 }

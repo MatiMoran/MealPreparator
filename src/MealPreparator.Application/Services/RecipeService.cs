@@ -49,7 +49,7 @@ public sealed class RecipeService
 
         var ingredientsById = await LoadIngredientsAsync(validated.Ingredients, cancellationToken);
 
-        var recipe = new Recipe(validated.Name, validated.Servings, validated.Instructions);
+        var recipe = new Recipe(validated.Name, validated.Servings, validated.Instructions, request.ImageUrl);
         recipe.ReplaceIngredients(validated.Ingredients.Select(item =>
             new RecipeIngredient(ingredientsById[item.IngredientId], item.Quantity)));
 
@@ -102,6 +102,7 @@ public sealed class RecipeService
         }
 
         recipe.UpdateDetails(validated.Name, validated.Servings, validated.Instructions);
+        recipe.SetImageUrl(request.ImageUrl);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return recipe.ToDto();

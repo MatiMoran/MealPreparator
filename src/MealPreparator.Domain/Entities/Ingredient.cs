@@ -11,13 +11,16 @@ public sealed class Ingredient
 
     public UnitOfMeasure Unit { get; private set; }
 
+    public string? ImageUrl { get; private set; }
+
     private Ingredient()
     {
     }
 
-    public Ingredient(string name, UnitOfMeasure unit)
+    public Ingredient(string name, UnitOfMeasure unit, string? imageUrl = null)
     {
         Update(name, unit);
+        SetImageUrl(imageUrl);
     }
 
     public void Update(string name, UnitOfMeasure unit)
@@ -41,5 +44,23 @@ public sealed class Ingredient
 
         Name = trimmedName;
         Unit = unit;
+    }
+
+    public void SetImageUrl(string? imageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+        {
+            ImageUrl = null;
+            return;
+        }
+
+        var trimmed = imageUrl.Trim();
+
+        if (trimmed.Length > 500)
+        {
+            throw new DomainValidationException("Ingredient image URL cannot exceed 500 characters.");
+        }
+
+        ImageUrl = trimmed;
     }
 }

@@ -54,6 +54,7 @@ public sealed class RecipeEndpointsTests : IClassFixture<MealPreparatorApiFactor
             IntegrationTestHelpers.UniqueName("Receta"),
             2,
             null,
+            null,
             [new RecipeIngredientRequest(999999, 100m)]);
 
         var response = await _client.PostAsJsonAsync(
@@ -70,6 +71,7 @@ public sealed class RecipeEndpointsTests : IClassFixture<MealPreparatorApiFactor
         var request = new CreateRecipeRequest(
             IntegrationTestHelpers.UniqueName("Receta"),
             2,
+            null,
             null,
             []);
 
@@ -105,6 +107,7 @@ public sealed class RecipeEndpointsTests : IClassFixture<MealPreparatorApiFactor
             recipe.Name,
             3,
             "Actualizada",
+            null,
             [new RecipeIngredientRequest(rice.Id, 250m)]);
 
         var updateResponse = await _client.PutAsJsonAsync(

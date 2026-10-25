@@ -10,4 +10,5 @@ public sealed record ShoppingListItemDto(
     int IngredientId,
     string IngredientName,
     UnitOfMeasure Unit,
+    string UnitDisplay,
     decimal Quantity);
