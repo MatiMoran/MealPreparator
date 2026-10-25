@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using MealPreparator.Domain.Entities;
 using MealPreparator.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,7 @@ public static class DatabaseSeeder
     {
         if (await dbContext.Ingredients.AnyAsync(cancellationToken))
         {
+            await EnsureBinaryIngredientsAsync(dbContext, cancellationToken);
             return;
         }
 
@@ -48,6 +51,8 @@ public static class DatabaseSeeder
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
+        await EnsureBinaryIngredientsAsync(dbContext, cancellationToken);
+
         var chickenWithRice = new Recipe(
             "Arroz con pollo",
             4,
@@ -83,5 +88,61 @@ public static class DatabaseSeeder
 
         await dbContext.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+    }
+
+    private static async Task EnsureBinaryIngredientsAsync(
+        MealPreparatorDbContext dbContext,
+        CancellationToken cancellationToken)
+    {
+        var pantryIngredients = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["aceite"] = "Aceite",
+            ["sal"] = "Sal",
+            ["oregano"] = "Orégano",
+            ["pimenton"] = "Pimentón",
+            ["aji molido"] = "Ají molido",
+            ["pimienta negra"] = "Pimienta negra",
+            ["aceite de oliva"] = "Aceite de oliva"
+        };
+
+        var existingIngredients = await dbContext.Ingredients.ToListAsync(cancellationToken);
+        var normalized = existingIngredients
+            .GroupBy(ingredient => NormalizeName(ingredient.Name), StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.Ordinal);
+
+        foreach (var (normalizedName, displayName) in pantryIngredients)
+        {
+            if (normalized.TryGetValue(normalizedName, out var matchingIngredients))
+            {
+                foreach (var ingredient in matchingIngredients)
+                {
+                    ingredient.Update(ingredient.Name, UnitOfMeasure.Binary);
+                }
+
+                continue;
+            }
+
+            dbContext.Ingredients.Add(new Ingredient(
+                displayName,
+                UnitOfMeasure.Binary,
+                $"images/ingredients/{normalizedName.Replace(' ', '-')}.jpg"));
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private static string NormalizeName(string name)
+    {
+        var decomposed = name.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
+        var builder = new StringBuilder(decomposed.Length);
+        foreach (var character in decomposed)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.NonSpacingMark)
+            {
+                builder.Append(character);
+            }
+        }
+
+        return builder.ToString().Normalize(NormalizationForm.FormC);
     }
 }

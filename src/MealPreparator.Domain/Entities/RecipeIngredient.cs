@@ -1,3 +1,4 @@
+using MealPreparator.Domain.Enums;
 using MealPreparator.Domain.Exceptions;
 
 namespace MealPreparator.Domain.Entities;
@@ -33,6 +34,7 @@ public sealed class RecipeIngredient
         : this(ingredient?.Id ?? throw new ArgumentNullException(nameof(ingredient)), quantity)
     {
         Ingredient = ingredient;
+        SetQuantity(ingredient.Unit == UnitOfMeasure.Binary ? 1m : quantity);
     }
 
     public void SetQuantity(decimal quantity)
@@ -47,6 +49,6 @@ public sealed class RecipeIngredient
             throw new DomainValidationException("Ingredient quantity is too large.");
         }
 
-        Quantity = quantity;
+        Quantity = Ingredient?.Unit == UnitOfMeasure.Binary ? 1m : quantity;
     }
 }

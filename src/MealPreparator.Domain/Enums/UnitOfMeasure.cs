@@ -10,5 +10,6 @@ public enum UnitOfMeasure
     Liter = 5,
     Tablespoon = 6,
     Teaspoon = 7,
-    Cup = 8
+    Cup = 8,
+    Binary = 9
 }

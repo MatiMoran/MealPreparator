@@ -143,7 +143,7 @@ generateBtn.addEventListener('click', async () => {
         else {
             for (const item of data) {
                 const div = document.createElement('div'); div.className = 'modal__item';
-                div.innerHTML = `<span class="modal__item-name">${item.ingredientName}</span><span class="modal__item-qty">${item.quantity} ${item.unitDisplay}</span>`;
+                div.innerHTML = `<span class="modal__item-name">${item.ingredientName}</span><span class="modal__item-qty">${formatIngredientAmount(item)}</span>`;
                 modalBody.appendChild(div);
             }
         }
@@ -159,7 +159,7 @@ generateBtn.addEventListener('click', async () => {
 modalCopy.addEventListener('click', async () => {
     if (!lastShoppingList || lastShoppingList.length === 0) return;
     const max = Math.max(...lastShoppingList.map(i => (i.ingredientName||'').length), 0);
-    const text = lastShoppingList.map(i => `${(i.ingredientName||'').padEnd(max+2)}${i.quantity} ${i.unitDisplay}`).join('\n');
+    const text = lastShoppingList.map(i => `${(i.ingredientName||'').padEnd(max+2)}${formatIngredientAmount(i)}`).join('\n');
     try {
         await navigator.clipboard.writeText(text);
         modalCopyFeedback.textContent = '¡Copiado!';
@@ -305,18 +305,30 @@ function addRecipeIngRow(data) {
     sel.innerHTML = '<option value="">Seleccionar ingrediente</option>' + ingredients.map(i=>`<option value="${i.id}" data-unit="${i.unit}">${i.name}</option>`).join('');
     if (data.ingredientId) sel.value = data.ingredientId;
     const qty = document.createElement('input'); qty.className = 'form__input'; qty.type='number'; qty.min='0'; qty.step='0.01'; qty.value = data.quantity || '';
+    const presenceLabel = document.createElement('label'); presenceLabel.className = 'recipe-ing-presence';
+    const presence = document.createElement('input'); presence.type = 'checkbox'; presence.checked = Number(data.quantity) > 0;
+    presenceLabel.append(presence, document.createTextNode(' Está'));
     const unit = document.createElement('span'); unit.className = 'recipe-ing-unit'; unit.textContent = data.unit ? unitDisplay(data.unit) : '';
-    sel.addEventListener('change', ()=>{ const opt = sel.options[sel.selectedIndex]; unit.textContent = opt.dataset.unit ? unitDisplay(opt.dataset.unit) : ''; });
+    const updateQuantityInput = (unitName) => {
+        const isBinary = isBinaryUnit(unitName);
+        qty.style.display = isBinary ? 'none' : '';
+        presenceLabel.style.display = isBinary ? 'inline-flex' : 'none';
+        unit.textContent = unitName ? unitDisplay(unitName) : '';
+    };
+    sel.addEventListener('change', ()=>{ const opt = sel.options[sel.selectedIndex]; updateQuantityInput(opt.dataset.unit); });
+    updateQuantityInput(data.unit || sel.options[sel.selectedIndex]?.dataset.unit);
     const rm = document.createElement('button'); rm.className='form__link'; rm.textContent='Quitar';
     rm.addEventListener('click', ()=>{ row.remove(); recipeIngRows = recipeIngRows.filter(x=>x.row!==row); });
-    row.appendChild(sel); row.appendChild(qty); row.appendChild(unit); row.appendChild(rm);
+    row.appendChild(sel); row.appendChild(qty); row.appendChild(presenceLabel); row.appendChild(unit); row.appendChild(rm);
     recipeIngList.appendChild(row);
-    recipeIngRows.push({ row, sel, qty, unit });
+    recipeIngRows.push({ row, sel, qty, presence, unit });
 }
 
 btnAddRecipeIng.addEventListener('click', ()=>addRecipeIngRow({}));
 
-function unitDisplay(u){ const map={'Gram':'g','Milliliter':'ml','Unit':'unidad','Tablespoon':'cucharada','Teaspoon':'cucharadita'}; if(u==='Unit') return 'unidad'; return map[u]||u; }
+function isBinaryUnit(unit){ return unit === 'Binary'; }
+function unitDisplay(u){ const map={'Gram':'g','Milliliter':'ml','Unit':'unidad','Tablespoon':'cucharada','Teaspoon':'cucharadita','Binary':'presente'}; if(u==='Unit') return 'unidad'; return map[u]||u; }
+function formatIngredientAmount(item){ return isBinaryUnit(item.unit) ? item.unitDisplay : `${item.quantity} ${item.unitDisplay}`; }
 
 btnNewIngInline.addEventListener('click', ()=>{ openInlineIngModal(); });
 
@@ -324,8 +336,10 @@ recipeSave.addEventListener('click', async ()=>{
     const items = [];
     for (const r of recipeIngRows) {
         const id = r.sel.value ? parseInt(r.sel.value) : null;
+        const unit = r.sel.options[r.sel.selectedIndex]?.dataset.unit;
+        if (id && isBinaryUnit(unit) && r.presence.checked) items.push({ ingredientId: id, quantity: 1 });
         const q = parseFloat(r.qty.value);
-        if (id && q > 0) items.push({ ingredientId: id, quantity: q });
+        if (id && !isBinaryUnit(unit) && q > 0) items.push({ ingredientId: id, quantity: q });
     }
     if (items.length === 0) { alert('Agregá al menos un ingrediente'); return; }
     const img = recipeImageUploaded || (recipeImageUrl.value.startsWith('http') ? recipeImageUrl.value : recipeImageUrl.value || null);
@@ -356,7 +370,7 @@ const ingredientCancel = document.getElementById('ingredient-cancel');
 let ingImageUploaded = '';
 
 const unitOptions = [
-    {v:'Gram',t:'gramo (g)'},{v:'Milliliter',t:'mililitro (ml)'},{v:'Unit',t:'unidad/unidades'},{v:'Tablespoon',t:'cucharada/s'},{v:'Teaspoon',t:'cucharadita/s'}
+    {v:'Gram',t:'gramo (g)'},{v:'Milliliter',t:'mililitro (ml)'},{v:'Unit',t:'unidad/unidades'},{v:'Tablespoon',t:'cucharada/s'},{v:'Teaspoon',t:'cucharadita/s'},{v:'Binary',t:'presente o ausente'}
 ];
 ingredientUnit.innerHTML = unitOptions.map(o=>`<option value="${o.v}">${o.t}</option>`).join('');
 

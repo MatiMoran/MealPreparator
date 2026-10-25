@@ -18,6 +18,7 @@ public static class UnitOfMeasureExtensions
             UnitOfMeasure.Tablespoon => isPlural ? "cucharadas" : "cucharada",
             UnitOfMeasure.Teaspoon => isPlural ? "cucharaditas" : "cucharadita",
             UnitOfMeasure.Cup => isPlural ? "tazas" : "taza",
+            UnitOfMeasure.Binary => "presente",
             UnitOfMeasure.Unknown => "unidad",
             _ => unit.ToString().ToLowerInvariant()
         };

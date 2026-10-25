@@ -50,7 +50,14 @@ public static class ShoppingListCalculator
                     totals.Add(recipeIngredient.IngredientId, accumulator);
                 }
 
-                accumulator.TotalQuantity += recipeIngredient.Quantity * scaleFactor;
+                if (recipeIngredient.Ingredient.Unit == UnitOfMeasure.Binary)
+                {
+                    accumulator.TotalQuantity = 1m;
+                }
+                else
+                {
+                    accumulator.TotalQuantity += recipeIngredient.Quantity * scaleFactor;
+                }
             }
         }
 

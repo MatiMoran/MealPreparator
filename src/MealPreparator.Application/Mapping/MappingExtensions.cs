@@ -24,7 +24,9 @@ public static class MappingExtensions
                 recipeIngredient.Ingredient.Name,
                 recipeIngredient.Ingredient.Unit,
                 recipeIngredient.Ingredient.Unit.ToSpanishDisplay(recipeIngredient.Quantity),
-                recipeIngredient.Quantity))
+                recipeIngredient.Ingredient.Unit == MealPreparator.Domain.Enums.UnitOfMeasure.Binary
+                    ? 1m
+                    : recipeIngredient.Quantity))
             .OrderBy(ingredient => ingredient.IngredientName, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
