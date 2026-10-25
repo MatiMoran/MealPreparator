@@ -4,6 +4,7 @@ using MealPreparator.Application.Exceptions;
 using MealPreparator.Application.Mapping;
 using MealPreparator.Application.Validation;
 using MealPreparator.Domain.Entities;
+using MealPreparator.Domain.Enums;
 
 namespace MealPreparator.Application.Services;
 
@@ -56,6 +57,56 @@ public sealed class RecipeService
         await _recipes.AddAsync(recipe, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        return recipe.ToDto();
+    }
+
+    public async Task<RecipeDto> CreateFromInputsAsync(
+        CreateRecipeRequestV2 request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var name = RequestValidator.RequireName(request.Name, nameof(request.Name));
+        RequestValidator.RequirePositive(request.Servings, nameof(request.Servings));
+        var instructions = RequestValidator.NormalizeOptionalText(request.Instructions, nameof(request.Instructions), 4000);
+
+        if (request.Ingredients is null || request.Ingredients.Count == 0)
+            throw new ValidationException("A recipe must contain at least one ingredient.");
+
+        var ingredientIds = new HashSet<int>();
+        var recipe = new Recipe(name, request.Servings, instructions, request.ImageUrl);
+        await _recipes.AddAsync(recipe, cancellationToken);
+
+        foreach (var input in request.Ingredients)
+        {
+            if (input is null) throw new ValidationException("Recipe ingredients cannot contain null entries.");
+            RequestValidator.RequirePositive(input.Quantity, "Ingredient quantity");
+
+            Ingredient ingredient;
+            if (input.CreateNew || input.IngredientId is null || input.IngredientId == 0)
+            {
+                var ingName = RequestValidator.RequireName(input.Name, nameof(input.Name));
+                if (!Enum.TryParse<UnitOfMeasure>(input.Unit, true, out var unit))
+                    throw new ValidationException("Invalid ingredient unit.");
+                if (await _ingredients.ExistsByNameAsync(ingName, cancellationToken: cancellationToken))
+                    throw new ConflictException($"An ingredient named '{ingName}' already exists.");
+                ingredient = new Ingredient(ingName, unit, input.ImageUrl);
+                await _ingredients.AddAsync(ingredient, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            else
+            {
+                ingredient = await _ingredients.GetByIdAsync(input.IngredientId.Value, cancellationToken)
+                    ?? throw new NotFoundException($"Ingredient with id {input.IngredientId} was not found.");
+            }
+
+            if (!ingredientIds.Add(ingredient.Id))
+                throw new ValidationException("A recipe cannot contain the same ingredient more than once.");
+
+            recipe.AddIngredient(new RecipeIngredient(ingredient, input.Quantity));
+        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return recipe.ToDto();
     }
 

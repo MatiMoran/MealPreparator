@@ -39,6 +39,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapIngredientEndpoints();
 app.MapRecipeEndpoints();
 app.MapShoppingListEndpoints();
+app.MapImageEndpoints();
 
 await using (var scope = app.Services.CreateAsyncScope())
 {

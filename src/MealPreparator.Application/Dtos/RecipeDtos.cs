@@ -34,3 +34,18 @@ public sealed record RecipeDto(
     IReadOnlyList<RecipeIngredientDto> Ingredients);
 
 public sealed record RecipeSummaryDto(int Id, string Name, int Servings, string? ImageUrl);
+
+public sealed record CreateRecipeIngredientInput(
+    int? IngredientId,
+    string? Name,
+    string? Unit,
+    decimal Quantity,
+    string? ImageUrl,
+    bool CreateNew = false);
+
+public sealed record CreateRecipeRequestV2(
+    string? Name,
+    int Servings,
+    string? Instructions,
+    IReadOnlyList<CreateRecipeIngredientInput>? Ingredients,
+    string? ImageUrl);

@@ -13,10 +13,11 @@
 <body>
     <nav class="nav">
         <div class="nav__container">
-            <a href="#" class="nav__logo" id="nav-logo">Meal Preparator</a>
+            <a href="#home" class="nav__logo" id="nav-logo">Meal Preparator</a>
             <div class="nav__links">
-                <a href="#armar-lista" class="nav__link">Armar lista</a>
-                <a href="#about" class="nav__link">About</a>
+                <a href="#gestor" class="nav__link">Gestionar recetas e ingredientes</a>
+                <a href="#home" class="nav__link nav__link-home">Armar lista</a>
+                <a href="#home" class="nav__link nav__link-about">About</a>
             </div>
             <button class="nav__cta" id="nav-generate">Generar lista de compra</button>
             <button class="nav__menu" id="nav-menu" aria-label="Menu">
@@ -28,151 +29,188 @@
             </button>
         </div>
         <div class="nav__mobile" id="nav-mobile">
-            <a href="#armar-lista" class="nav__mobile-link">Armar lista</a>
-            <a href="#about" class="nav__mobile-link">About</a>
+            <a href="#gestor" class="nav__mobile-link">Gestionar recetas e ingredientes</a>
+            <a href="#home" class="nav__mobile-link nav__mobile-link-home">Armar lista</a>
+            <a href="#home" class="nav__mobile-link nav__mobile-link-about">About</a>
             <button class="nav__mobile-cta" id="nav-generate-mobile">Generar lista de compra</button>
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero__bg">
-            <img src="https://images.unsplash.com/photo-1543353071-873f17a7a088?auto=format&fit=crop&q=80&w=2000" alt="Comida saludable" class="hero__image">
-            <div class="hero__overlay"></div>
-        </div>
-        <div class="hero__content">
-            <span class="hero__eyebrow">Meal Preparator</span>
-            <h1 class="hero__title">Arma tu lista de <span class="hero__title-italic">compras</span></h1>
-            <p class="hero__subtitle">Elegí las recetas y las porciones que necesitás. Generamos los ingredientes totales agregados para tu meal prep.</p>
-            <a href="#armar-lista" class="hero__cta">Generar lista de compra</a>
-        </div>
-        <div class="hero__scroll">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-            </svg>
-        </div>
-    </header>
+    <main id="view-home">
+        <header class="hero">
+            <div class="hero__bg">
+                <img src="https://images.unsplash.com/photo-1543353071-873f17a7a088?auto=format&fit=crop&q=80&w=2000" alt="Comida saludable" class="hero__image">
+                <div class="hero__overlay"></div>
+            </div>
+            <div class="hero__content">
+                <span class="hero__eyebrow">Meal Preparator</span>
+                <h1 class="hero__title">Arma tu lista de <span class="hero__title-italic">compras</span></h1>
+                <p class="hero__subtitle">Elegí las recetas y las porciones que necesitás. Generamos los ingredientes totales agregados para tu meal prep.</p>
+                <a href="#home" class="hero__cta" id="hero-cta">Generar lista de compra</a>
+            </div>
+            <div class="hero__scroll">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </div>
+        </header>
 
-    <section class="recipes" id="armar-lista">
-        <div class="recipes__container">
-            <div class="recipes__header">
-                <h2 class="recipes__title">Las recetas</h2>
-                <p class="recipes__subtitle">Seleccioná las porciones que querés y generá tu lista de compras agregada.</p>
+        <section class="recipes" id="armar-lista">
+            <div class="recipes__container">
+                <div class="recipes__header">
+                    <h2 class="recipes__title">Las recetas</h2>
+                    <p class="recipes__subtitle">Seleccioná las porciones que querés y generá tu lista de compras agregada.</p>
+                </div>
+                <div class="recipes__grid" id="recipes-grid">
+                    <div class="recipes__loading">Cargando recetas...</div>
+                </div>
+                <div class="recipes__actions">
+                    <button class="recipes__generate" id="generate-list" disabled>Generar ingredientes</button>
+                    <p class="recipes__hint" id="generate-hint">Seleccioná al menos una receta con porciones mayores a 0.</p>
+                    <a href="#gestor" class="recipes__manage-link">Gestionar recetas e ingredientes →</a>
+                </div>
             </div>
-            <div class="recipes__grid" id="recipes-grid">
-                <div class="recipes__loading">Cargando recetas...</div>
-            </div>
-            <div class="recipes__actions">
-                <button class="recipes__generate" id="generate-list" disabled>Generar ingredientes</button>
-                <p class="recipes__hint" id="generate-hint">Seleccioná al menos una receta con porciones mayores a 0.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="about" id="about">
-        <div class="about__intro">
-            <div class="about__intro-grid">
-                <div class="about__intro-left">
-                    <h2 class="about__title">Born from the earth,<br>built for the mind.</h2>
-                </div>
-                <div class="about__intro-right">
-                    <p class="about__text">Meal Preparator te permite organizar tu meal prep eligiendo las recetas que vas a preparar durante la semana. Simple, directo y pensado para uso local.</p>
-                    <p class="about__text">Sin planificador complejo: elegís porciones, obtenés el total de ingredientes agregado.</p>
-                    <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=1400" alt="Ingredientes frescos" class="about__image">
-                    <p class="about__caption">Ingredientes frescos</p>
+        <section class="about" id="about">
+            <div class="about__intro">
+                <div class="about__intro-grid">
+                    <div class="about__intro-left">
+                        <h2 class="about__title">Born from the earth,<br>built for the mind.</h2>
+                    </div>
+                    <div class="about__intro-right">
+                        <p class="about__text">Meal Preparator te permite organizar tu meal prep eligiendo las recetas que vas a preparar durante la semana. Simple, directo y pensado para uso local.</p>
+                        <p class="about__text">Sin planificador complejo: elegís porciones, obtenés el total de ingredientes agregado.</p>
+                        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=1400" alt="Ingredientes frescos" class="about__image">
+                        <p class="about__caption">Ingredientes frescos</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="about__block">
-            <div class="about__block-grid">
-                <div class="about__block-media">
-                    <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=1400" alt="Comida saludable" class="about__block-image">
-                </div>
-                <div class="about__block-content about__block-content--light">
-                    <span class="about__block-eyebrow">Materiality</span>
-                    <h3 class="about__block-title">Ingredientes, recetas y totales.</h3>
-                    <p class="about__block-text">Todo viene directo desde la API. Unidades traducidas al español, cantidades redondeadas y lista agregada por ingrediente.</p>
+            <div class="about__block">
+                <div class="about__block-grid">
+                    <div class="about__block-media">
+                        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=1400" alt="Comida saludable" class="about__block-image">
+                    </div>
+                    <div class="about__block-content about__block-content--light">
+                        <span class="about__block-eyebrow">Materiality</span>
+                        <h3 class="about__block-title">Ingredientes, recetas y totales.</h3>
+                        <p class="about__block-text">Todo viene directo desde la API. Unidades traducidas al español, cantidades redondeadas y lista agregada por ingrediente.</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="about__block">
-            <div class="about__block-grid">
-                <div class="about__block-content about__block-content--dark">
-                    <span class="about__block-eyebrow about__block-eyebrow--light">The Ecosystem</span>
-                    <h3 class="about__block-title about__block-title--light">Rápido y simple.</h3>
-                    <p class="about__block-text about__block-text--light">Elegí, calculá y listo. Sin autenticación, sin pasos innecesarios. Pensado para un solo usuario.</p>
-                </div>
-                <div class="about__block-media">
-                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1400" alt="Ensalada fresca" class="about__block-image">
+            <div class="about__block">
+                <div class="about__block-grid">
+                    <div class="about__block-content about__block-content--dark">
+                        <span class="about__block-eyebrow about__block-eyebrow--light">The Ecosystem</span>
+                        <h3 class="about__block-title about__block-title--light">Rápido y simple.</h3>
+                        <p class="about__block-text about__block-text--light">Elegí, calculá y listo. Sin autenticación, sin pasos innecesarios. Pensado para un solo usuario.</p>
+                    </div>
+                    <div class="about__block-media">
+                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1400" alt="Ensalada fresca" class="about__block-image">
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="journal">
-        <div class="journal__container">
-            <div class="journal__header">
-                <div>
-                    <span class="journal__eyebrow">Editorial</span>
-                    <h2 class="journal__title">The Journal</h2>
+        <section class="journal">
+            <div class="journal__container">
+                <div class="journal__header">
+                    <div>
+                        <span class="journal__eyebrow">Editorial</span>
+                        <h2 class="journal__title">The Journal</h2>
+                    </div>
+                </div>
+                <div class="journal__grid">
+                    <article class="journal__card">
+                        <div class="journal__card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&q=80&w=1400" alt="Meal prep" class="journal__card-image">
+                        </div>
+                        <div class="journal__card-content">
+                            <span class="journal__card-date">Meal Preparator</span>
+                            <h3 class="journal__card-title">Armar tu lista en segundos</h3>
+                            <p class="journal__card-excerpt">Seleccioná las recetas que vas a preparar y las porciones. Obtené el total agregado de ingredientes listo para ir al supermercado.</p>
+                        </div>
+                    </article>
+                    <article class="journal__card">
+                        <div class="journal__card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&q=80&w=1400" alt="Ingredientes" class="journal__card-image">
+                        </div>
+                        <div class="journal__card-content">
+                            <span class="journal__card-date">Meal Preparator</span>
+                            <h3 class="journal__card-title">Unidades claras</h3>
+                            <p class="journal__card-excerpt">Las cantidades vienen con unidades traducidas al español para que sean fáciles de leer.</p>
+                        </div>
+                    </article>
+                    <article class="journal__card">
+                        <div class="journal__card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&q=80&w=1400" alt="Cocina" class="journal__card-image">
+                        </div>
+                        <div class="journal__card-content">
+                            <span class="journal__card-date">Meal Preparator</span>
+                            <h3 class="journal__card-title">Todo agregado</h3>
+                            <p class="journal__card-excerpt">Si el mismo ingrediente aparece en varias recetas, se suma automáticamente.</p>
+                        </div>
+                    </article>
                 </div>
             </div>
-            <div class="journal__grid">
-                <article class="journal__card">
-                    <div class="journal__card-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&q=80&w=1400" alt="Meal prep" class="journal__card-image">
-                    </div>
-                    <div class="journal__card-content">
-                        <span class="journal__card-date">Meal Preparator</span>
-                        <h3 class="journal__card-title">Armar tu lista en segundos</h3>
-                        <p class="journal__card-excerpt">Seleccioná las recetas que vas a preparar y las porciones. Obtené el total agregado de ingredientes listo para ir al supermercado.</p>
-                    </div>
-                </article>
-                <article class="journal__card">
-                    <div class="journal__card-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&q=80&w=1400" alt="Ingredientes" class="journal__card-image">
-                    </div>
-                    <div class="journal__card-content">
-                        <span class="journal__card-date">Meal Preparator</span>
-                        <h3 class="journal__card-title">Unidades claras</h3>
-                        <p class="journal__card-excerpt">Las cantidades vienen con unidades traducidas al español para que sean fáciles de leer.</p>
-                    </div>
-                </article>
-                <article class="journal__card">
-                    <div class="journal__card-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&q=80&w=1400" alt="Cocina" class="journal__card-image">
-                    </div>
-                    <div class="journal__card-content">
-                        <span class="journal__card-date">Meal Preparator</span>
-                        <h3 class="journal__card-title">Todo agregado</h3>
-                        <p class="journal__card-excerpt">Si el mismo ingrediente aparece en varias recetas, se suma automáticamente.</p>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="footer">
-        <div class="footer__container">
-            <div class="footer__top">
-                <div class="footer__brand">
-                    <h4 class="footer__brand-name">Meal Preparator</h4>
-                    <p class="footer__brand-text">Arma tu lista de compras para meal prep de forma simple.</p>
+        <footer class="footer">
+            <div class="footer__container">
+                <div class="footer__top">
+                    <div class="footer__brand">
+                        <h4 class="footer__brand-name">Meal Preparator</h4>
+                        <p class="footer__brand-text">Arma tu lista de compras para meal prep de forma simple.</p>
+                    </div>
+                    <div class="footer__links">
+                        <h4 class="footer__links-title">Navegación</h4>
+                        <ul class="footer__links-list">
+                            <li><a href="#gestor">Gestionar recetas e ingredientes</a></li>
+                            <li><a href="#home" class="footer__link-home">Armar lista</a></li>
+                            <li><a href="#home" class="footer__link-about">About</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="footer__links">
-                    <h4 class="footer__links-title">Navegación</h4>
-                    <ul class="footer__links-list">
-                        <li><a href="#armar-lista">Armar lista</a></li>
-                        <li><a href="#about">About</a></li>
-                    </ul>
+                <div class="footer__bottom">
+                    <p>Created by <a href="https://github.com/MatiMoran" target="_blank" rel="noopener noreferrer">MatiMoran</a></p>
                 </div>
             </div>
-            <div class="footer__bottom">
-                <p>Created by <a href="https://github.com/MatiMoran" target="_blank" rel="noopener noreferrer">MatiMoran</a></p>
+        </footer>
+    </main>
+
+    <main id="view-gestor" style="display:none;">
+        <section class="gestor">
+            <div class="gestor__container">
+                <div class="gestor__header">
+                    <div>
+                        <h1 class="gestor__title">Gestionar recetas e ingredientes</h1>
+                        <p class="gestor__subtitle">Crear, editar o eliminar recetas e ingredientes. Podés subir imágenes desde tu PC o pegar una URL.</p>
+                    </div>
+                    <a href="#home" class="gestor__back">← Volver al inicio</a>
+                </div>
+
+                <div class="gestor__grid">
+                    <section class="gestor__panel">
+                        <div class="gestor__panel-header">
+                            <h2 class="gestor__panel-title">Recetas</h2>
+                            <button class="gestor__btn" id="btn-new-recipe">Nueva receta</button>
+                        </div>
+                        <div class="gestor__list" id="gestor-recipes-list"></div>
+                    </section>
+
+                    <section class="gestor__panel">
+                        <div class="gestor__panel-header">
+                            <h2 class="gestor__panel-title">Ingredientes</h2>
+                            <button class="gestor__btn" id="btn-new-ingredient">Nuevo ingrediente</button>
+                        </div>
+                        <div class="gestor__list" id="gestor-ingredients-list"></div>
+                    </section>
+                </div>
             </div>
-        </div>
-    </footer>
+        </section>
+    </main>
 
     <div class="modal" id="shopping-modal">
         <div class="modal__backdrop" id="modal-backdrop"></div>
@@ -186,10 +224,138 @@
                     </svg>
                 </button>
             </div>
-            <div class="modal__body" id="modal-body">
+            <div class="modal__body" id="modal-body"></div>
+            <div class="modal__footer">
+                <button class="modal__copy" id="modal-copy">Copiar al portapapeles</button>
+                <span class="modal__copy-feedback" id="modal-copy-feedback"></span>
             </div>
         </div>
     </div>
+
+    <div class="modal" id="recipe-modal">
+        <div class="modal__backdrop" id="recipe-modal-backdrop"></div>
+        <div class="modal__content modal__content--large">
+            <div class="modal__header">
+                <h2 class="modal__title" id="recipe-modal-title">Nueva receta</h2>
+                <button class="modal__close" id="recipe-modal-close" aria-label="Cerrar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal__body">
+                <input type="hidden" id="recipe-id">
+                <div class="form__row">
+                    <label class="form__label">Nombre</label>
+                    <input class="form__input" id="recipe-name" type="text">
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Porciones</label>
+                    <input class="form__input" id="recipe-servings" type="number" min="1" max="99">
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Instrucciones (opcional)</label>
+                    <textarea class="form__textarea" id="recipe-instructions"></textarea>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Imagen</label>
+                    <div class="image-upload" id="recipe-image-drop">
+                        <div class="image-upload__text">Arrastrá una imagen aquí o hacé click para seleccionar</div>
+                        <input type="file" id="recipe-image-file" accept="image/*" style="display:none;">
+                    </div>
+                    <input class="form__input" id="recipe-image-url" placeholder="O pegar URL de imagen" style="margin-top:0.75rem;">
+                    <img id="recipe-image-preview" class="image-preview" style="display:none;">
+                </div>
+                <div class="form__row">
+                    <div class="form__row-header">
+                        <label class="form__label">Ingredientes de la receta</label>
+                        <button class="form__link" id="btn-add-recipe-ing">Agregar fila</button>
+                    </div>
+                    <div id="recipe-ingredients-list" class="recipe-ing-list"></div>
+                    <button class="form__link" id="btn-new-ing-inline">+ Crear ingrediente nuevo</button>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="modal__copy" id="recipe-save">Guardar receta</button>
+                <button class="modal__copy modal__copy--ghost" id="recipe-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="ingredient-modal">
+        <div class="modal__backdrop" id="ingredient-modal-backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="ingredient-modal-title">Nuevo ingrediente</h2>
+                <button class="modal__close" id="ingredient-modal-close" aria-label="Cerrar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal__body">
+                <input type="hidden" id="ingredient-id">
+                <div class="form__row">
+                    <label class="form__label">Nombre</label>
+                    <input class="form__input" id="ingredient-name" type="text">
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Unidad</label>
+                    <select class="form__input" id="ingredient-unit"></select>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Imagen</label>
+                    <div class="image-upload" id="ingredient-image-drop">
+                        <div class="image-upload__text">Arrastrá una imagen aquí o hacé click para seleccionar</div>
+                        <input type="file" id="ingredient-image-file" accept="image/*" style="display:none;">
+                    </div>
+                    <input class="form__input" id="ingredient-image-url" placeholder="O pegar URL de imagen" style="margin-top:0.75rem;">
+                    <img id="ingredient-image-preview" class="image-preview" style="display:none;">
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="modal__copy" id="ingredient-save">Guardar ingrediente</button>
+                <button class="modal__copy modal__copy--ghost" id="ingredient-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="inline-ing-modal">
+        <div class="modal__backdrop" id="inline-ing-backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title">Crear ingrediente nuevo</h2>
+                <button class="modal__close" id="inline-ing-close" aria-label="Cerrar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal__body">
+                <div class="form__row">
+                    <label class="form__label">Nombre</label>
+                    <input class="form__input" id="inline-ing-name" type="text">
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Unidad</label>
+                    <select class="form__input" id="inline-ing-unit"></select>
+                </div>
+                <div class="form__row">
+                    <label class="form__label">Imagen</label>
+                    <input class="form__input" id="inline-ing-url" placeholder="URL de imagen (opcional)">
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="modal__copy" id="inline-ing-save">Guardar y agregar</button>
+                <button class="modal__copy modal__copy--ghost" id="inline-ing-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
 
     <script src="assets/js/app.js"></script>
 </body>
