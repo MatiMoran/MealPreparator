@@ -26,7 +26,12 @@ public static class MappingExtensions
 
     public static RecipeSummaryDto ToSummaryDto(this Recipe recipe)
     {
-        return new RecipeSummaryDto(recipe.Id, recipe.Name, recipe.Servings, recipe.ImageUrl);
+        return new RecipeSummaryDto(
+            recipe.Id,
+            recipe.Name,
+            recipe.Servings,
+            recipe.ImageUrl,
+            recipe.Tags.Select(recipeTag => recipeTag.Tag.Name).Order(StringComparer.OrdinalIgnoreCase).ToList());
     }
 
     public static RecipeDto ToDto(this Recipe recipe)
@@ -48,7 +53,8 @@ public static class MappingExtensions
             recipe.Servings,
             recipe.Instructions,
             recipe.ImageUrl,
-            ingredients);
+            ingredients,
+            recipe.Tags.Select(recipeTag => recipeTag.Tag.Name).Order(StringComparer.OrdinalIgnoreCase).ToList());
     }
 
     public static ShoppingListItemDto ToDto(this ShoppingListEntry entry)

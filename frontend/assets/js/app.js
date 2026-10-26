@@ -1,10 +1,14 @@
+const { bindExplicitDismissal, shouldDismissOnEscape } = window.ModalClosePolicy;
+
 const API_BASE = 'http://localhost:5080';
 
 let recipes = [];
 let ingredients = [];
 let selections = {};
+let activeRecipeTags = new Set();
 
 const recipesGrid = document.getElementById('recipes-grid');
+const recipeTagFilters = document.getElementById('recipe-tag-filters');
 const generateBtn = document.getElementById('generate-list');
 const generateHint = document.getElementById('generate-hint');
 const navGenerate = document.getElementById('nav-generate');
@@ -81,20 +85,72 @@ async function loadRecipes() {
         const res = await fetch(`${API_BASE}/api/recipes`);
         if (!res.ok) throw new Error('Error');
         recipes = await res.json();
-        recipesGrid.innerHTML = '';
-        for (const recipe of recipes) {
-            selections[recipe.id] = selections[recipe.id] || 0;
-            const card = document.createElement('div');
-            card.className = 'recipe-card';
-            card.innerHTML = `
+        const availableTags = new Set(getRecipeTagNames());
+        activeRecipeTags = new Set([...activeRecipeTags].filter(tag => availableTags.has(tag)));
+        for (const recipe of recipes) selections[recipe.id] = selections[recipe.id] || 0;
+        renderRecipeFilters();
+        renderRecipeCards();
+    } catch (e) {
+        recipesGrid.innerHTML = `<div class="recipes__loading">No se pudo conectar con la API en ${escapeHtml(API_BASE)}</div>`;
+    }
+}
+
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+}
+
+function getRecipeTagNames() {
+    return [...new Set(recipes.flatMap(recipe => recipe.tags || []))]
+        .sort((a, b) => a.localeCompare(b, 'es'));
+}
+
+function renderRecipeFilters() {
+    const tags = getRecipeTagNames();
+    recipeTagFilters.innerHTML = tags.map(tag => `
+        <button type="button" class="recipes__filter${activeRecipeTags.has(tag) ? ' is-active' : ''}"
+            data-tag="${escapeHtml(tag)}" aria-pressed="${activeRecipeTags.has(tag)}">${escapeHtml(tag)}</button>
+    `).join('') + (activeRecipeTags.size ? '<button type="button" class="recipes__filter-clear">Limpiar filtros</button>' : '');
+
+    recipeTagFilters.querySelectorAll('[data-tag]').forEach(button => button.addEventListener('click', () => {
+        const tag = button.dataset.tag;
+        if (activeRecipeTags.has(tag)) activeRecipeTags.delete(tag);
+        else activeRecipeTags.add(tag);
+        renderRecipeFilters();
+        renderRecipeCards();
+    }));
+    recipeTagFilters.querySelector('.recipes__filter-clear')?.addEventListener('click', () => {
+        activeRecipeTags.clear();
+        renderRecipeFilters();
+        renderRecipeCards();
+    });
+}
+
+function renderRecipeCards() {
+    const visibleRecipes = recipes.filter(recipe => [...activeRecipeTags].every(tag => (recipe.tags || []).includes(tag)));
+    if (visibleRecipes.length === 0) {
+        recipesGrid.innerHTML = '<div class="recipes__loading">No hay recetas que coincidan con los tags seleccionados.</div>';
+        return;
+    }
+
+    recipesGrid.innerHTML = '';
+    for (const recipe of visibleRecipes) {
+        const card = document.createElement('div');
+        card.className = 'recipe-card';
+        const imageUrl = recipe.imageUrl
+            ? (recipe.imageUrl.startsWith('http') ? recipe.imageUrl : API_BASE + '/' + recipe.imageUrl)
+            : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1400';
+        card.innerHTML = `
                 <div class="recipe-card__image-wrapper">
-                    <img src="${recipe.imageUrl ? (recipe.imageUrl.startsWith('http') ? recipe.imageUrl : API_BASE + '/' + recipe.imageUrl) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1400'}" alt="${recipe.name}" class="recipe-card__image" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1400'">
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(recipe.name)}" class="recipe-card__image" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1400'">
                 </div>
                 <div class="recipe-card__content">
                     <div class="recipe-card__header">
-                        <h3 class="recipe-card__name">${recipe.name}</h3>
+                        <h3 class="recipe-card__name">${escapeHtml(recipe.name)}</h3>
                         <span class="recipe-card__servings">Rinde ${recipe.servings} porciones</span>
                     </div>
+                    <div class="recipe-card__tags">${(recipe.tags || []).map(tag => `<span class="recipe-card__tag">${escapeHtml(tag)}</span>`).join('')}</div>
                     <div class="recipe-card__controls">
                         <span class="recipe-card__label">Porciones</span>
                         <div class="recipe-card__counter">
@@ -105,26 +161,21 @@ async function loadRecipes() {
                     </div>
                 </div>
             `;
-            recipesGrid.appendChild(card);
-        }
-        recipesGrid.querySelectorAll('.recipe-card__btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = parseInt(btn.dataset.id);
-                if (btn.dataset.action === 'inc') selections[id] = Math.min((selections[id]||0)+1, 99);
-                else selections[id] = Math.max((selections[id]||0)-1, 0);
-                document.getElementById(`count-${id}`).textContent = selections[id];
-                updateGenerateButton();
-            });
-        });
-    } catch (e) {
-        recipesGrid.innerHTML = `<div class="recipes__loading">No se pudo conectar con la API en ${API_BASE}</div>`;
+        recipesGrid.appendChild(card);
     }
+    recipesGrid.querySelectorAll('.recipe-card__btn').forEach(btn => btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        if (btn.dataset.action === 'inc') selections[id] = Math.min((selections[id] || 0) + 1, 99);
+        else selections[id] = Math.max((selections[id] || 0) - 1, 0);
+        document.getElementById(`count-${id}`).textContent = selections[id];
+        updateGenerateButton();
+    }));
 }
 
 function updateGenerateButton() {
     const has = Object.values(selections).some(v => v > 0);
     generateBtn.disabled = !has;
-    generateHint.style.display = has ? 'none' : 'block';
+    generateHint.style.visibility = has ? 'hidden' : 'visible';
 }
 
 let lastShoppingList = [];
@@ -184,7 +235,11 @@ modalCopy.addEventListener('click', async () => {
 const closeModal = () => { modal.classList.remove('active'); document.body.style.overflow = ''; };
 modalBackdrop.addEventListener('click', closeModal);
 modalClose.addEventListener('click', closeModal);
-document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeModal(); closeRecipeModal(); closeIngredientModal(); closeInlineModal(); }});
+document.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') {
+        if (shouldDismissOnEscape(recipeModal, ingredientModal, inlineIngModal)) closeModal();
+    }
+});
 
 // gestor
 const gestorRecipes = document.getElementById('gestor-recipes-list');
@@ -204,7 +259,7 @@ function renderGestorRecipes() {
     gestorRecipes.innerHTML = '';
     for (const r of recipes) {
         const div = document.createElement('div'); div.className = 'gestor__item';
-        div.innerHTML = `<img class="gestor__item-img" src="${r.imageUrl?(r.imageUrl.startsWith('http')?r.imageUrl:API_BASE+'/'+r.imageUrl):'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'"><div class="gestor__item-info"><span class="gestor__item-name">${r.name}</span><span class="gestor__item-meta">Porciones: ${r.servings}</span></div><div class="gestor__item-actions"><button class="gestor__action" data-act="edit" data-id="${r.id}">Editar</button><button class="gestor__action gestor__action--danger" data-act="del" data-id="${r.id}">Eliminar</button></div>`;
+        div.innerHTML = `<img class="gestor__item-img" src="${r.imageUrl?(r.imageUrl.startsWith('http')?r.imageUrl:API_BASE+'/'+r.imageUrl):'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400'"><div class="gestor__item-info"><span class="gestor__item-name">${escapeHtml(r.name)}</span><span class="gestor__item-meta">Porciones: ${r.servings}</span><span class="gestor__item-meta">${(r.tags || []).map(escapeHtml).join(' · ')}</span></div><div class="gestor__item-actions"><button class="gestor__action" data-act="edit" data-id="${r.id}">Editar</button><button class="gestor__action gestor__action--danger" data-act="del" data-id="${r.id}">Eliminar</button></div>`;
         gestorRecipes.appendChild(div);
     }
     gestorRecipes.querySelectorAll('button').forEach(b => b.addEventListener('click', async ()=>{
@@ -245,7 +300,6 @@ function renderGestorIngredients() {
 
 // recipe modal
 const recipeModal = document.getElementById('recipe-modal');
-const recipeModalBackdrop = document.getElementById('recipe-modal-backdrop');
 const recipeModalClose = document.getElementById('recipe-modal-close');
 const recipeModalTitle = document.getElementById('recipe-modal-title');
 const recipeId = document.getElementById('recipe-id');
@@ -257,16 +311,19 @@ const recipeImageFile = document.getElementById('recipe-image-file');
 const recipeImageUrl = document.getElementById('recipe-image-url');
 const recipeImagePreview = document.getElementById('recipe-image-preview');
 const recipeIngList = document.getElementById('recipe-ingredients-list');
+const recipeTagsSelected = document.getElementById('recipe-tags-selected');
+const recipeTagsAvailable = document.getElementById('recipe-tags-available');
+const recipeTagInput = document.getElementById('recipe-tag-input');
+const recipeTagAdd = document.getElementById('recipe-tag-add');
 const btnAddRecipeIng = document.getElementById('btn-add-recipe-ing');
 const btnNewIngInline = document.getElementById('btn-new-ing-inline');
 const recipeSave = document.getElementById('recipe-save');
 const recipeCancel = document.getElementById('recipe-cancel');
 let recipeIngRows = [];
 let recipeImageUploaded = '';
+let recipeTags = [];
 
-recipeModalBackdrop.addEventListener('click', closeRecipeModal);
-recipeModalClose.addEventListener('click', closeRecipeModal);
-recipeCancel.addEventListener('click', closeRecipeModal);
+bindExplicitDismissal(recipeCancel, recipeModalClose, closeRecipeModal);
 function closeRecipeModal(){ recipeModal.classList.remove('active'); document.body.style.overflow=''; }
 
 recipeImageDrop.addEventListener('click', ()=>recipeImageFile.click());
@@ -296,6 +353,9 @@ function openRecipeModal(detail) {
     recipeServings.value = detail?.servings || 2;
     recipeInstructions.value = detail?.instructions || '';
     recipeImageUploaded = detail?.imageUrl || '';
+    recipeTags = [...(detail?.tags || [])];
+    recipeTagInput.value = '';
+    renderRecipeTagEditor();
     recipeImageUrl.value = detail?.imageUrl && detail.imageUrl.startsWith('http') ? detail.imageUrl : '';
     if (recipeImageUploaded) { recipeImagePreview.src = recipeImageUploaded.startsWith('http') ? recipeImageUploaded : API_BASE + '/' + recipeImageUploaded; recipeImagePreview.style.display = 'block'; } else recipeImagePreview.style.display = 'none';
     recipeIngRows = [];
@@ -309,6 +369,49 @@ function openRecipeModal(detail) {
     }
     recipeModal.classList.add('active'); document.body.style.overflow = 'hidden';
 }
+
+function renderRecipeTagEditor() {
+    recipeTagsSelected.innerHTML = recipeTags.map((tag, index) => `
+        <span class="recipe-tag-chip">${escapeHtml(tag)}
+            <button type="button" aria-label="Quitar ${escapeHtml(tag)}" data-tag-index="${index}">×</button>
+        </span>
+    `).join('');
+    recipeTagsSelected.querySelectorAll('[data-tag-index]').forEach(button => button.addEventListener('click', () => {
+        recipeTags.splice(parseInt(button.dataset.tagIndex), 1);
+        renderRecipeTagEditor();
+    }));
+
+    recipeTagsAvailable.innerHTML = getRecipeTagNames()
+        .filter(tag => !recipeTags.some(selected => selected.localeCompare(tag, undefined, { sensitivity: 'accent' }) === 0))
+        .map(tag => `<button type="button" class="recipe-tag-option" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)} +</button>`)
+        .join('');
+    recipeTagsAvailable.querySelectorAll('[data-tag]').forEach(button => button.addEventListener('click', () => {
+        recipeTags.push(button.dataset.tag);
+        renderRecipeTagEditor();
+    }));
+}
+
+function addRecipeTag() {
+    const name = recipeTagInput.value.trim();
+    if (!name) return;
+    if (name.length > 50) {
+        alert('El tag no puede superar los 50 caracteres.');
+        return;
+    }
+    if (!recipeTags.some(tag => tag.localeCompare(name, undefined, { sensitivity: 'accent' }) === 0)) {
+        recipeTags.push(name);
+        renderRecipeTagEditor();
+    }
+    recipeTagInput.value = '';
+}
+
+recipeTagAdd.addEventListener('click', addRecipeTag);
+recipeTagInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        addRecipeTag();
+    }
+});
 
 function addRecipeIngRow(data) {
     const row = document.createElement('div'); row.className = 'recipe-ing-row';
@@ -362,7 +465,7 @@ recipeSave.addEventListener('click', async ()=>{
     }
     if (items.length === 0) { alert('Agregá al menos un ingrediente'); return; }
     const img = recipeImageUploaded || (recipeImageUrl.value.startsWith('http') ? recipeImageUrl.value : recipeImageUrl.value || null);
-    const payload = { name: recipeName.value, servings: parseInt(recipeServings.value), instructions: recipeInstructions.value || null, ingredients: items, imageUrl: img };
+    const payload = { name: recipeName.value, servings: parseInt(recipeServings.value), instructions: recipeInstructions.value || null, ingredients: items, imageUrl: img, tags: recipeTags };
     try {
         let res;
         if (recipeId.value) res = await fetch(`${API_BASE}/api/recipes/${recipeId.value}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
@@ -374,7 +477,6 @@ recipeSave.addEventListener('click', async ()=>{
 
 // ingredient modal
 const ingredientModal = document.getElementById('ingredient-modal');
-const ingredientModalBackdrop = document.getElementById('ingredient-modal-backdrop');
 const ingredientModalClose = document.getElementById('ingredient-modal-close');
 const ingredientModalTitle = document.getElementById('ingredient-modal-title');
 const ingredientIdEl = document.getElementById('ingredient-id');
@@ -435,9 +537,7 @@ ingredientBinary.addEventListener('change', ()=>{
     ingredientConversionsRow.style.display = ingredientBinary.checked ? 'none' : '';
 });
 
-ingredientModalBackdrop.addEventListener('click', closeIngredientModal);
-ingredientModalClose.addEventListener('click', closeIngredientModal);
-ingredientCancel.addEventListener('click', closeIngredientModal);
+bindExplicitDismissal(ingredientCancel, ingredientModalClose, closeIngredientModal);
 function closeIngredientModal(){ ingredientModal.classList.remove('active'); document.body.style.overflow=''; }
 
 ingredientImageDrop.addEventListener('click', ()=>ingredientImageFile.click());
@@ -489,7 +589,6 @@ ingredientSave.addEventListener('click', async ()=>{
 
 // inline ingredient
 const inlineIngModal = document.getElementById('inline-ing-modal');
-const inlineIngBackdrop = document.getElementById('inline-ing-backdrop');
 const inlineIngClose = document.getElementById('inline-ing-close');
 const inlineIngName = document.getElementById('inline-ing-name');
 const inlineIngUnit = document.getElementById('inline-ing-unit');
@@ -499,9 +598,7 @@ const inlineIngSave = document.getElementById('inline-ing-save');
 const inlineIngCancel = document.getElementById('inline-ing-cancel');
 inlineIngUnit.innerHTML = unitOptions.map(o=>`<option value="${o.v}">${o.t}</option>`).join('');
 inlineIngBinary.addEventListener('change', ()=>{ inlineIngUnit.disabled = inlineIngBinary.checked; });
-inlineIngBackdrop.addEventListener('click', closeInlineModal);
-inlineIngClose.addEventListener('click', closeInlineModal);
-inlineIngCancel.addEventListener('click', closeInlineModal);
+bindExplicitDismissal(inlineIngCancel, inlineIngClose, closeInlineModal);
 function closeInlineModal(){ inlineIngModal.classList.remove('active'); document.body.style.overflow=''; }
 function openInlineIngModal(){ inlineIngName.value=''; inlineIngUrl.value=''; inlineIngBinary.checked=false; inlineIngUnit.disabled=false; inlineIngModal.classList.add('active'); document.body.style.overflow='hidden'; }
 inlineIngSave.addEventListener('click', async ()=>{

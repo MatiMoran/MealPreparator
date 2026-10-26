@@ -12,14 +12,16 @@ public sealed record CreateRecipeRequest(
     int Servings,
     string? Instructions,
     string? ImageUrl,
-    List<RecipeIngredientRequest>? Ingredients);
+    List<RecipeIngredientRequest>? Ingredients,
+    List<string>? Tags = null);
 
 public sealed record UpdateRecipeRequest(
     string Name,
     int Servings,
     string? Instructions,
     string? ImageUrl,
-    List<RecipeIngredientRequest>? Ingredients);
+    List<RecipeIngredientRequest>? Ingredients,
+    List<string>? Tags = null);
 
 public sealed record RecipeIngredientDto(
     int IngredientId,
@@ -35,9 +37,15 @@ public sealed record RecipeDto(
     int Servings,
     string? Instructions,
     string? ImageUrl,
-    IReadOnlyList<RecipeIngredientDto> Ingredients);
+    IReadOnlyList<RecipeIngredientDto> Ingredients,
+    IReadOnlyList<string> Tags);
 
-public sealed record RecipeSummaryDto(int Id, string Name, int Servings, string? ImageUrl);
+public sealed record RecipeSummaryDto(
+    int Id,
+    string Name,
+    int Servings,
+    string? ImageUrl,
+    IReadOnlyList<string> Tags);
 
 public sealed record CreateRecipeIngredientInput(
     int? IngredientId,
@@ -53,4 +61,5 @@ public sealed record CreateRecipeRequestV2(
     int Servings,
     string? Instructions,
     IReadOnlyList<CreateRecipeIngredientInput>? Ingredients,
-    string? ImageUrl);
+    string? ImageUrl,
+    IReadOnlyList<string>? Tags = null);

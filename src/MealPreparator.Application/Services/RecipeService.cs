@@ -11,15 +11,18 @@ namespace MealPreparator.Application.Services;
 public sealed class RecipeService
 {
     private readonly IRecipeRepository _recipes;
+    private readonly ITagRepository _tags;
     private readonly IIngredientRepository _ingredients;
     private readonly IUnitOfWork _unitOfWork;
 
     public RecipeService(
         IRecipeRepository recipes,
+        ITagRepository tags,
         IIngredientRepository ingredients,
         IUnitOfWork unitOfWork)
     {
         _recipes = recipes;
+        _tags = tags;
         _ingredients = ingredients;
         _unitOfWork = unitOfWork;
     }
@@ -51,6 +54,7 @@ public sealed class RecipeService
         var ingredientsById = await LoadIngredientsAsync(validated.Ingredients, cancellationToken);
 
         var recipe = new Recipe(validated.Name, validated.Servings, validated.Instructions, request.ImageUrl);
+        recipe.ReplaceTags(await ResolveTagsAsync(request.Tags ?? [], cancellationToken));
         recipe.ReplaceIngredients(validated.Ingredients.Select(item =>
             new RecipeIngredient(
                 ingredientsById[item.IngredientId],
@@ -78,6 +82,7 @@ public sealed class RecipeService
 
         var ingredientIds = new HashSet<int>();
         var recipe = new Recipe(name, request.Servings, instructions, request.ImageUrl);
+        recipe.ReplaceTags(await ResolveTagsAsync(request.Tags ?? [], cancellationToken));
         await _recipes.AddAsync(recipe, cancellationToken);
 
         foreach (var input in request.Ingredients)
@@ -161,6 +166,7 @@ public sealed class RecipeService
 
         recipe.UpdateDetails(validated.Name, validated.Servings, validated.Instructions);
         recipe.SetImageUrl(request.ImageUrl);
+        recipe.ReplaceTags(await ResolveTagsAsync(request.Tags ?? [], cancellationToken));
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return recipe.ToDto();
@@ -200,6 +206,38 @@ public sealed class RecipeService
         }
 
         return ingredientsById;
+    }
+
+    private async Task<IReadOnlyList<Tag>> ResolveTagsAsync(
+        IReadOnlyCollection<string> requestedNames,
+        CancellationToken cancellationToken)
+    {
+        var names = requestedNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (names.Any(name => name.Length > 50))
+        {
+            throw new ValidationException("Tag names cannot exceed 50 characters.");
+        }
+
+        var existingTags = await _tags.GetByNamesAsync(names, cancellationToken);
+        var existingNames = existingTags
+            .Select(tag => tag.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var newTags = names
+            .Where(name => !existingNames.Contains(name))
+            .Select(name => new Tag(name))
+            .ToList();
+
+        if (newTags.Count > 0)
+        {
+            await _tags.AddRangeAsync(newTags, cancellationToken);
+        }
+
+        return existingTags.Concat(newTags).ToList();
     }
 
     private static ValidatedRecipe ValidateRequest(

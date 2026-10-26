@@ -37,6 +37,7 @@ cantidad final = cantidad de la receta * factor
 ## Requisitos
 
 - .NET SDK 10 (el repositorio incluye `global.json`).
+- Node.js para ejecutar los tests unitarios del frontend.
 
 En NixOS se puede usar de forma temporal:
 
@@ -44,7 +45,7 @@ En NixOS se puede usar de forma temporal:
 nix-shell -p dotnet-sdk_10
 ```
 
-El hook de pre-commit detecta si `dotnet` está disponible y, si no lo está, lo ejecuta mediante `nix-shell -p dotnet-sdk_10` automáticamente.
+El hook de pre-commit ejecuta el build, los tests unitarios de .NET y los tests del frontend. Si falta .NET o Node.js, usa `nix-shell` para proveer ambos.
 
 ## Puesta en marcha
 
@@ -57,7 +58,7 @@ dotnet test MealPreparator.slnx
 
 ## Git hook
 
-The repository includes a pre-commit hook that builds the solution and runs the unit tests before each commit. It uses the current `dotnet` command when available, or starts the Nix shell above automatically. Enable it in this checkout with:
+The repository includes a pre-commit hook that builds the solution and runs the .NET and frontend unit tests before each commit. It uses the installed runtimes when available, or starts a Nix shell with both automatically. Enable it in this checkout with:
 
 ```bash
 git config core.hooksPath .githooks

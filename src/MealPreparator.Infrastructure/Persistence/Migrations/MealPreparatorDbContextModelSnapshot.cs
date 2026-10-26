@@ -74,6 +74,41 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                     b.ToTable("Recipes", (string)null);
                 });
 
+            modelBuilder.Entity("MealPreparator.Domain.Entities.RecipeTag", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RecipeId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("RecipeTags", (string)null);
+                });
+
+            modelBuilder.Entity("MealPreparator.Domain.Entities.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tags", (string)null);
+                });
+
             modelBuilder.Entity("MealPreparator.Domain.Entities.RecipeIngredient", b =>
                 {
                     b.Property<int>("RecipeId")
@@ -94,6 +129,23 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
                     b.HasIndex("IngredientId");
 
                     b.ToTable("RecipeIngredients", (string)null);
+                });
+
+            modelBuilder.Entity("MealPreparator.Domain.Entities.RecipeTag", b =>
+                {
+                    b.HasOne("MealPreparator.Domain.Entities.Recipe", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MealPreparator.Domain.Entities.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("MealPreparator.Domain.Entities.IngredientUnitConversion", b =>
@@ -160,6 +212,7 @@ namespace MealPreparator.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MealPreparator.Domain.Entities.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

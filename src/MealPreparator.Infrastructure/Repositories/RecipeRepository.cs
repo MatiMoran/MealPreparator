@@ -19,6 +19,8 @@ public sealed class RecipeRepository : IRecipeRepository
     {
         return await _dbContext.Recipes
             .AsNoTracking()
+            .Include(recipe => recipe.Tags)
+            .ThenInclude(recipeTag => recipeTag.Tag)
             .OrderBy(recipe => recipe.Name)
             .ToListAsync(cancellationToken);
     }
@@ -29,6 +31,8 @@ public sealed class RecipeRepository : IRecipeRepository
             .Include(recipe => recipe.Ingredients)
             .ThenInclude(recipeIngredient => recipeIngredient.Ingredient)
             .ThenInclude(ingredient => ingredient.UnitConversions)
+            .Include(recipe => recipe.Tags)
+            .ThenInclude(recipeTag => recipeTag.Tag)
             .FirstOrDefaultAsync(recipe => recipe.Id == id, cancellationToken);
     }
 
@@ -41,6 +45,8 @@ public sealed class RecipeRepository : IRecipeRepository
             .Include(recipe => recipe.Ingredients)
             .ThenInclude(recipeIngredient => recipeIngredient.Ingredient)
             .ThenInclude(ingredient => ingredient.UnitConversions)
+            .Include(recipe => recipe.Tags)
+            .ThenInclude(recipeTag => recipeTag.Tag)
             .Where(recipe => ids.Contains(recipe.Id))
             .ToListAsync(cancellationToken);
     }

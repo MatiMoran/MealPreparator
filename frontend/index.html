@@ -60,6 +60,7 @@
                 <div class="recipes__header">
                     <h2 class="recipes__title">Las recetas</h2>
                     <p class="recipes__subtitle">Seleccioná las porciones que querés y generá tu lista de compras agregada.</p>
+                    <div class="recipes__filters" id="recipe-tag-filters" aria-label="Filtrar recetas por tags"></div>
                 </div>
                 <div class="recipes__grid" id="recipes-grid">
                     <div class="recipes__loading">Cargando recetas...</div>
@@ -268,6 +269,15 @@
                     <img id="recipe-image-preview" class="image-preview" style="display:none;">
                 </div>
                 <div class="form__row">
+                    <label class="form__label" for="recipe-tag-input">Tags</label>
+                    <div id="recipe-tags-selected" class="recipe-tags-editor"></div>
+                    <div id="recipe-tags-available" class="recipe-tags-available" aria-label="Tags existentes"></div>
+                    <div class="recipe-tag-add">
+                        <input class="form__input" id="recipe-tag-input" maxlength="50" placeholder="Crear un tag nuevo">
+                        <button class="form__link" id="recipe-tag-add" type="button">Agregar tag</button>
+                    </div>
+                </div>
+                <div class="form__row">
                     <div class="form__row-header">
                         <label class="form__label">Ingredientes de la receta</label>
                         <button class="form__link" id="btn-add-recipe-ing">Agregar fila</button>
@@ -365,6 +375,7 @@
 
     <div id="toast" class="toast"></div>
 
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/modal-close-policy.js?v=modal-close-x-2"></script>
+    <script src="assets/js/app.js?v=modal-close-x-2"></script>
 </body>
 </html>

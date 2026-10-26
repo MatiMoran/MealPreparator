@@ -31,12 +31,24 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .HasForeignKey(recipeIngredient => recipeIngredient.RecipeId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(recipe => recipe.Tags)
+            .WithOne()
+            .HasForeignKey(recipeTag => recipeTag.RecipeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         var ingredientsNavigation = builder.Metadata.FindNavigation(nameof(Recipe.Ingredients));
 
         if (ingredientsNavigation is not null)
         {
             ingredientsNavigation.SetField("_ingredients");
             ingredientsNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+        }
+
+        var tagsNavigation = builder.Metadata.FindNavigation(nameof(Recipe.Tags));
+        if (tagsNavigation is not null)
+        {
+            tagsNavigation.SetField("_tags");
+            tagsNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

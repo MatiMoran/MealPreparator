@@ -48,6 +48,69 @@ public sealed class RecipeEndpointsTests : IClassFixture<MealPreparatorApiFactor
     }
 
     [Fact]
+    public async Task CreateAndUpdateRecipe_ShouldPersistTagsInSummaryAndDetail()
+    {
+        var rice = await IntegrationTestHelpers.CreateIngredientAsync(
+            _client,
+            IntegrationTestHelpers.UniqueName("Arroz"),
+            UnitOfMeasure.Gram);
+        var createRequest = new CreateRecipeRequest(
+            IntegrationTestHelpers.UniqueName("Receta"),
+            2,
+            null,
+            null,
+            [new RecipeIngredientRequest(rice.Id, 100m)],
+            ["Desayuno"]);
+        var createResponse = await _client.PostAsJsonAsync(
+            "/api/recipes",
+            createRequest,
+            IntegrationTestHelpers.JsonOptions);
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var recipe = (await createResponse.Content.ReadFromJsonAsync<RecipeDto>(IntegrationTestHelpers.JsonOptions))!;
+        recipe.Tags.Should().ContainSingle().Which.Should().Be("Desayuno");
+
+        var updateRequest = new UpdateRecipeRequest(
+            recipe.Name,
+            2,
+            null,
+            null,
+            [new RecipeIngredientRequest(rice.Id, 100m)],
+            ["Meriendas y Desayunos", "Casero"]);
+        var updateResponse = await _client.PutAsJsonAsync(
+            $"/api/recipes/{recipe.Id}",
+            updateRequest,
+            IntegrationTestHelpers.JsonOptions);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<RecipeDto>(IntegrationTestHelpers.JsonOptions);
+        updated!.Tags.Should().BeEquivalentTo("Meriendas y Desayunos", "Casero");
+
+        var summaries = await _client.GetFromJsonAsync<List<RecipeSummaryDto>>(
+            "/api/recipes",
+            IntegrationTestHelpers.JsonOptions);
+        summaries!.Single(item => item.Id == recipe.Id).Tags.Should()
+            .BeEquivalentTo("Meriendas y Desayunos", "Casero");
+
+        var reuseRequest = updateRequest with { Tags = ["casero"] };
+        var reuseResponse = await _client.PutAsJsonAsync(
+            $"/api/recipes/{recipe.Id}",
+            reuseRequest,
+            IntegrationTestHelpers.JsonOptions);
+        reuseResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var reused = await reuseResponse.Content.ReadFromJsonAsync<RecipeDto>(IntegrationTestHelpers.JsonOptions);
+        reused!.Tags.Should().ContainSingle().Which.Should().Be("Casero");
+
+        var clearTagsRequest = updateRequest with { Tags = [] };
+        var clearResponse = await _client.PutAsJsonAsync(
+            $"/api/recipes/{recipe.Id}",
+            clearTagsRequest,
+            IntegrationTestHelpers.JsonOptions);
+        clearResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var cleared = await clearResponse.Content.ReadFromJsonAsync<RecipeDto>(IntegrationTestHelpers.JsonOptions);
+        cleared!.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task CreateRecipe_WithUnknownIngredient_ShouldReturnBadRequest()
     {
         var request = new CreateRecipeRequest(

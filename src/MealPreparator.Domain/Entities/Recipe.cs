@@ -5,6 +5,7 @@ namespace MealPreparator.Domain.Entities;
 public sealed class Recipe
 {
     private readonly List<RecipeIngredient> _ingredients = new();
+    private readonly List<RecipeTag> _tags = new();
 
     public int Id { get; internal set; }
 
@@ -17,6 +18,8 @@ public sealed class Recipe
     public string? ImageUrl { get; private set; }
 
     public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients;
+
+    public IReadOnlyCollection<RecipeTag> Tags => _tags;
 
     private Recipe()
     {
@@ -115,5 +118,19 @@ public sealed class Recipe
     public void RemoveIngredient(int ingredientId)
     {
         _ingredients.RemoveAll(ingredient => ingredient.IngredientId == ingredientId);
+    }
+
+    public void ReplaceTags(IEnumerable<Tag> tags)
+    {
+        ArgumentNullException.ThrowIfNull(tags);
+
+        var list = tags.ToList();
+        if (list.Select(tag => tag.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count() != list.Count)
+        {
+            throw new DomainValidationException("A recipe cannot contain the same tag more than once.");
+        }
+
+        _tags.Clear();
+        _tags.AddRange(list.Select(tag => new RecipeTag(tag)));
     }
 }

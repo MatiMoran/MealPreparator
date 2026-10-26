@@ -65,8 +65,8 @@ public static class DatabaseSeeder
         [
             new RecipeIngredient(rice, 400m),
             new RecipeIngredient(chicken, 600m),
-            new RecipeIngredient(oil, 30m),
-            new RecipeIngredient(salt, 5m),
+            new RecipeIngredient(oil, null),
+            new RecipeIngredient(salt, null),
             new RecipeIngredient(onion, 1m),
             new RecipeIngredient(bellPepper, 1m)
         ]);
@@ -76,6 +76,11 @@ public static class DatabaseSeeder
             2,
             "1. Cortar la fruta en cubos. 2. Mezclar con el yogur y el azucar. 3. Servir fria.",
             "images/recipes/ensalada-de-frutas.jpg");
+
+        var tags = await dbContext.Tags.ToListAsync(cancellationToken);
+        var tagsByName = tags.ToDictionary(tag => tag.Name, StringComparer.OrdinalIgnoreCase);
+        chickenWithRice.ReplaceTags([tagsByName["Pollo"]]);
+        fruitSalad.ReplaceTags([tagsByName["Postre"], tagsByName["Meriendas y Desayunos"]]);
 
         fruitSalad.ReplaceIngredients(
         [

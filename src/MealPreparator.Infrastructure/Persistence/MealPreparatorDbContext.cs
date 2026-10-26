@@ -18,6 +18,10 @@ public sealed class MealPreparatorDbContext : DbContext
 
     public DbSet<IngredientUnitConversion> IngredientUnitConversions => Set<IngredientUnitConversion>();
 
+    public DbSet<Tag> Tags => Set<Tag>();
+
+    public DbSet<RecipeTag> RecipeTags => Set<RecipeTag>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MealPreparatorDbContext).Assembly);

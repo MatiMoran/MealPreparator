@@ -4,13 +4,14 @@ set -eu
 run_checks() {
     dotnet build MealPreparator.slnx
     dotnet test tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj --no-build
+    node --test-reporter=spec frontend/tests/*.test.cjs
 }
 
-if command -v dotnet >/dev/null 2>&1 && dotnet --version >/dev/null 2>&1; then
+if command -v dotnet >/dev/null 2>&1 && dotnet --version >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
     run_checks
 elif command -v nix-shell >/dev/null 2>&1; then
-    if nix-shell -p dotnet-sdk_10 --run \
-        'dotnet build MealPreparator.slnx && dotnet test tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj --no-build'; then
+    if nix-shell -p dotnet-sdk_10 nodejs --run \
+        'dotnet build MealPreparator.slnx && dotnet test tests/MealPreparator.UnitTests/MealPreparator.UnitTests.csproj --no-build && node --test-reporter=spec frontend/tests/*.test.cjs'; then
         exit 0
     else
         status=$?
@@ -18,6 +19,6 @@ elif command -v nix-shell >/dev/null 2>&1; then
         exit "$status"
     fi
 else
-    printf '%s\n' 'Pre-commit requires .NET SDK 10 or nix-shell. Install .NET 10 or install Nix with nix-shell available.' >&2
+    printf '%s\n' 'Pre-commit requires .NET SDK 10 and Node.js, or nix-shell. Install both runtimes or install Nix with nix-shell available.' >&2
     exit 127
 fi

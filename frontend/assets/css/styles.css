@@ -276,6 +276,38 @@ button {
     font-weight: 300;
 }
 
+.recipes__filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+.recipes__filter {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.recipes__filter:hover,
+.recipes__filter.is-active {
+    border-color: var(--text-primary);
+    background: var(--text-primary);
+    color: var(--bg-cream);
+}
+
+.recipes__filter-clear {
+    padding: 0.6rem 0.4rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
 .recipes__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -341,6 +373,52 @@ button {
     font-size: 0.875rem;
     color: var(--text-tertiary);
     white-space: nowrap;
+}
+
+.recipe-card__tags,
+.recipe-tags-editor,
+.recipe-tags-available {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.recipe-card__tags {
+    margin: -0.25rem 0 1rem;
+}
+
+.recipe-card__tag,
+.recipe-tag-chip,
+.recipe-tag-option {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.65rem;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.recipe-tag-option:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.recipe-tag-add {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.recipe-tag-add .form__input {
+    flex: 1;
+}
+
+.recipe-tag-chip button {
+    margin-left: 0.4rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1;
 }
 
 .recipe-card__instructions {
@@ -424,6 +502,7 @@ button {
 
 .recipes__hint {
     margin-top: 0.75rem;
+    min-height: 1.25em;
     color: var(--text-tertiary);
     font-size: 0.875rem;
 }
@@ -853,14 +932,14 @@ button {
     }
 }
 
-/* Grilla 4 columnas responsive */
+/* Grilla con hasta 6 columnas responsive */
 .recipes__grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1600px) {
     .recipes__grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
