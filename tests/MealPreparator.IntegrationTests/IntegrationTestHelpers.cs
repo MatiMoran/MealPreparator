@@ -44,7 +44,7 @@ internal static class IntegrationTestHelpers
             instructions,
             null,
             ingredients
-                .Select(item => new RecipeIngredientRequest(item.IngredientId, item.Quantity))
+                .Select(item => new RecipeIngredientRequest(item.IngredientId, item.Quantity, UnitOfMeasure.Gram))
                 .ToList());
 
         var response = await client.PostAsJsonAsync("/api/recipes", request, JsonOptions);

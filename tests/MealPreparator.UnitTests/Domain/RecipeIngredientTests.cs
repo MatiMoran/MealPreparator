@@ -13,19 +13,11 @@ public sealed class RecipeIngredientTests
     [InlineData(-1)]
     public void Constructor_ShouldThrow_WhenQuantityIsNotPositive(decimal quantity)
     {
-        var action = () => new RecipeIngredient(1, quantity);
+        var ingredient = new Ingredient("Arroz", UnitOfMeasure.Gram) { Id = 1 };
+        var action = () => new RecipeIngredient(ingredient, quantity, UnitOfMeasure.Gram);
 
         action.Should().Throw<DomainValidationException>()
             .WithMessage("*quantity*");
-    }
-
-    [Fact]
-    public void Constructor_ShouldThrow_WhenIngredientIdIsNotPositive()
-    {
-        var action = () => new RecipeIngredient(0, 100m);
-
-        action.Should().Throw<DomainValidationException>()
-            .WithMessage("*id*");
     }
 
     [Fact]
@@ -35,10 +27,10 @@ public sealed class RecipeIngredientTests
         {
             Id = 1
         };
-        var recipeIngredient = new RecipeIngredient(ingredient, 100m);
+        var recipeIngredient = new RecipeIngredient(ingredient, 100m, UnitOfMeasure.Gram);
 
         recipeIngredient.SetQuantity(250m);
 
-        recipeIngredient.Quantity.Should().Be(250m);
+        recipeIngredient.Quantity.Should().Be(0.25m);
     }
 }

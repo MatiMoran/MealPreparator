@@ -56,7 +56,7 @@ public sealed class Ingredient
 
         Name = trimmedName;
         IsBinary = isBinary;
-        Unit = isBinary ? null : unit;
+        Unit = isBinary ? null : UnitOfMeasureRules.ToCanonicalUnit(unit!.Value);
 
         if (isBinary)
         {
@@ -84,6 +84,12 @@ public sealed class Ingredient
             throw new DomainValidationException("The base unit cannot also be a conversion unit.");
         }
 
+        if (Unit.HasValue && list.Any(conversion =>
+                UnitOfMeasureRules.GetCategory(conversion.Unit) == UnitOfMeasureRules.GetCategory(Unit.Value)))
+        {
+            throw new DomainValidationException("Standard conversions within a unit category are generated automatically.");
+        }
+
         if (list.Select(conversion => conversion.Unit).Distinct().Count() != list.Count)
         {
             throw new DomainValidationException("Conversion units must be unique for an ingredient.");
@@ -95,8 +101,9 @@ public sealed class Ingredient
 
     public bool SupportsUnit(UnitOfMeasure? unit)
     {
-        return !IsBinary && unit.HasValue &&
-            (unit == Unit || _unitConversions.Any(conversion => conversion.Unit == unit));
+        return !IsBinary && unit.HasValue && Enum.IsDefined(unit.Value) && unit != UnitOfMeasure.Unknown &&
+            (UnitOfMeasureRules.GetCategory(unit.Value) == UnitOfMeasureRules.GetCategory(Unit!.Value) ||
+             _unitConversions.Any(conversion => conversion.Unit == unit));
     }
 
     public decimal ConvertToBaseQuantity(decimal quantity, UnitOfMeasure unit)
@@ -106,12 +113,25 @@ public sealed class Ingredient
             throw new DomainValidationException("The selected unit has no conversion for this ingredient.");
         }
 
-        if (unit == Unit)
+        if (UnitOfMeasureRules.GetCategory(unit) == UnitOfMeasureRules.GetCategory(Unit!.Value))
         {
-            return quantity;
+            return quantity * UnitOfMeasureRules.GetFactorToCanonical(Unit.Value, unit);
         }
 
         return quantity * _unitConversions.Single(conversion => conversion.Unit == unit).Factor;
+    }
+
+    public decimal ConvertFromBaseQuantity(decimal quantity, UnitOfMeasure unit)
+    {
+        if (!SupportsUnit(unit))
+        {
+            throw new DomainValidationException("The selected unit has no conversion for this ingredient.");
+        }
+
+        var factor = UnitOfMeasureRules.GetCategory(unit) == UnitOfMeasureRules.GetCategory(Unit!.Value)
+            ? UnitOfMeasureRules.GetFactorToCanonical(Unit.Value, unit)
+            : _unitConversions.Single(conversion => conversion.Unit == unit).Factor;
+        return quantity / factor;
     }
 
     public void SetImageUrl(string? imageUrl)

@@ -4,6 +4,7 @@ using MealPreparator.Application.Exceptions;
 using MealPreparator.Application.Mapping;
 using MealPreparator.Application.Validation;
 using MealPreparator.Domain.Entities;
+using MealPreparator.Domain.Enums;
 
 namespace MealPreparator.Application.Services;
 
@@ -43,11 +44,9 @@ public sealed class IngredientService
             throw new ConflictException($"An ingredient named '{name}' already exists.");
         }
 
-        var ingredient = new Ingredient(name, request.Unit, request.ImageUrl, request.IsBinary);
-        if (request.UnitConversions is not null)
-        {
-            ingredient.SetUnitConversions(ToConversions(request.UnitConversions));
-        }
+        var canonicalUnit = NormalizeUnit(request.Unit, request.IsBinary);
+        var ingredient = new Ingredient(name, canonicalUnit, request.ImageUrl, request.IsBinary);
+        ingredient.SetUnitConversions(BuildConversions(canonicalUnit, request.IsBinary, request.UnitConversions));
         await _ingredients.AddAsync(ingredient, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -69,17 +68,23 @@ public sealed class IngredientService
             throw new ConflictException($"An ingredient named '{name}' already exists.");
         }
 
-        var previousUnit = ingredient.Unit;
-        ingredient.Update(name, request.Unit, request.IsBinary);
+        IngredientCategory? previousCategory = ingredient.IsBinary ? null : UnitOfMeasureRules.GetCategory(ingredient.Unit!.Value);
+        var canonicalUnit = NormalizeUnit(request.Unit, request.IsBinary);
+        IngredientCategory? nextCategory = request.IsBinary ? null : UnitOfMeasureRules.GetCategory(canonicalUnit!.Value);
+        if (previousCategory != nextCategory && await _ingredients.IsUsedByRecipesAsync(id, cancellationToken))
+        {
+            throw new ConflictException("The ingredient category cannot change while recipes use it.");
+        }
+
+        ingredient.Update(name, canonicalUnit, request.IsBinary);
         ingredient.SetImageUrl(request.ImageUrl);
-        if (request.UnitConversions is not null)
-        {
-            ingredient.SetUnitConversions(ToConversions(request.UnitConversions));
-        }
-        else if (ingredient.IsBinary || previousUnit != ingredient.Unit)
-        {
-            ingredient.SetUnitConversions([]);
-        }
+        ingredient.SetUnitConversions(BuildConversions(
+            ingredient.Unit,
+            ingredient.IsBinary,
+            request.UnitConversions,
+            request.UnitConversions is null && previousCategory == nextCategory
+                ? ingredient.UnitConversions
+                : null));
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ingredient.ToDto();
@@ -104,13 +109,51 @@ public sealed class IngredientService
             ?? throw new NotFoundException($"Ingredient with id {id} was not found.");
     }
 
-    private static IReadOnlyList<IngredientUnitConversion> ToConversions(
-        IReadOnlyList<IngredientUnitConversionInput> inputs)
+    private static UnitOfMeasure? NormalizeUnit(UnitOfMeasure? unit, bool isBinary)
     {
-        return inputs.Select(input => new IngredientUnitConversion(
-            input.Unit,
-            input.Factor,
-            input.Source,
-            input.Note)).ToList();
+        if (isBinary)
+        {
+            return null;
+        }
+
+        if (!unit.HasValue || unit == UnitOfMeasure.Unknown || !Enum.IsDefined(unit.Value))
+        {
+            throw new ValidationException("A valid measurement category is required.");
+        }
+
+        return UnitOfMeasureRules.ToCanonicalUnit(unit.Value);
     }
+
+    private IReadOnlyList<IngredientUnitConversion> BuildConversions(
+        UnitOfMeasure? baseUnit,
+        bool isBinary,
+        IReadOnlyList<IngredientUnitConversionInput>? requested,
+        IEnumerable<IngredientUnitConversion>? existing = null)
+    {
+        if (isBinary || !baseUnit.HasValue)
+        {
+            return [];
+        }
+
+        var generated = new Dictionary<UnitOfMeasure, IngredientUnitConversion>();
+        foreach (var conversion in existing ?? [])
+        {
+            generated[conversion.Unit] = new IngredientUnitConversion(
+                conversion.Unit,
+                conversion.Factor,
+                conversion.Source,
+                conversion.Note);
+        }
+        foreach (var conversion in requested ?? [])
+        {
+            generated[conversion.Unit] = new IngredientUnitConversion(
+                conversion.Unit,
+                conversion.Factor,
+                conversion.Source,
+                conversion.Note);
+        }
+
+        return generated.Values.ToList();
+    }
+
 }

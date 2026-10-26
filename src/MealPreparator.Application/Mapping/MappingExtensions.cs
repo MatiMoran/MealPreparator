@@ -42,8 +42,12 @@ public static class MappingExtensions
                 recipeIngredient.Ingredient.Name,
                 recipeIngredient.Unit,
                 recipeIngredient.Ingredient.IsBinary,
-                recipeIngredient.Unit.ToSpanishDisplay(recipeIngredient.Quantity),
-                recipeIngredient.Quantity))
+                recipeIngredient.Unit.ToSpanishDisplay(recipeIngredient.Ingredient.IsBinary
+                    ? null
+                    : recipeIngredient.Ingredient.ConvertFromBaseQuantity(recipeIngredient.Quantity!.Value, recipeIngredient.Unit!.Value)),
+                recipeIngredient.Ingredient.IsBinary
+                    ? null
+                    : recipeIngredient.Ingredient.ConvertFromBaseQuantity(recipeIngredient.Quantity!.Value, recipeIngredient.Unit!.Value)))
             .OrderBy(ingredient => ingredient.IngredientName, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

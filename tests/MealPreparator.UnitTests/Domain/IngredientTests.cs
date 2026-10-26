@@ -14,7 +14,19 @@ public sealed class IngredientTests
         var ingredient = new Ingredient("  Arroz  ", UnitOfMeasure.Gram);
 
         ingredient.Name.Should().Be("Arroz");
-        ingredient.Unit.Should().Be(UnitOfMeasure.Gram);
+        ingredient.Unit.Should().Be(UnitOfMeasure.Kilogram);
+    }
+
+    [Fact]
+    public void MeasurementConversions_ShouldConvertWithinCategoryWithoutConversionRows()
+    {
+        var ingredient = new Ingredient("Harina", UnitOfMeasure.Gram);
+
+        ingredient.SupportsUnit(UnitOfMeasure.Gram).Should().BeTrue();
+        ingredient.SupportsUnit(UnitOfMeasure.Kilogram).Should().BeTrue();
+        ingredient.UnitConversions.Should().BeEmpty();
+        ingredient.ConvertToBaseQuantity(250m, UnitOfMeasure.Gram).Should().Be(0.25m);
+        ingredient.ConvertFromBaseQuantity(0.25m, UnitOfMeasure.Gram).Should().Be(250m);
     }
 
     [Theory]

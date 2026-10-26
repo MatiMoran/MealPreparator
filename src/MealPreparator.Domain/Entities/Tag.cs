@@ -14,6 +14,16 @@ public sealed class Tag
 
     public Tag(string name)
     {
+        Name = ValidateName(name);
+    }
+
+    public void Rename(string name)
+    {
+        Name = ValidateName(name);
+    }
+
+    private static string ValidateName(string name)
+    {
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new DomainValidationException("Tag name is required.");
@@ -25,6 +35,6 @@ public sealed class Tag
             throw new DomainValidationException("Tag name cannot exceed 50 characters.");
         }
 
-        Name = trimmedName;
+        return trimmedName;
     }
 }

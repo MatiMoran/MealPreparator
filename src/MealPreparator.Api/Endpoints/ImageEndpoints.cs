@@ -1,4 +1,5 @@
 using MealPreparator.Application.Dtos;
+using MealPreparator.Api.Services;
 
 namespace MealPreparator.Api.Endpoints;
 
@@ -11,7 +12,7 @@ public static class ImageEndpoints
 
         group.MapPost("/upload", async Task<IResult> (
             HttpRequest request,
-            IWebHostEnvironment env,
+            ImageStorageService images,
             CancellationToken cancellationToken) =>
         {
             if (!request.HasFormContentType)
@@ -22,26 +23,9 @@ public static class ImageEndpoints
             if (file is null || file.Length == 0)
                 return Results.BadRequest("No file uploaded");
 
-            if (file.Length > 5 * 1024 * 1024)
-                return Results.BadRequest("File too large (max 5MB)");
-
-            var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowed.Contains(ext))
-                return Results.BadRequest("Invalid file type");
-
             var type = form["type"].ToString().ToLowerInvariant();
-            var folder = type == "ingredient" ? "ingredients" : "recipes";
-            var webRoot = env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            var dir = Path.Combine(webRoot, "images", folder);
-            Directory.CreateDirectory(dir);
-
-            var fileName = $"{Guid.NewGuid():N}{ext}";
-            var path = Path.Combine(dir, fileName);
-            await using var stream = File.Create(path);
-            await file.CopyToAsync(stream, cancellationToken);
-
-            var url = $"images/{folder}/{fileName}";
+            var url = await images.StoreUploadAsync(file.OpenReadStream(), file.FileName,
+                type == "ingredient" ? "ingredient" : "recipe", cancellationToken);
             return Results.Ok(new ImageUploadResponse(url));
         });
 

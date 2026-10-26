@@ -18,7 +18,7 @@ public sealed class ShoppingListCalculatorTests
         var result = ShoppingListCalculator.Calculate([new RecipePortion(recipe, 2m)]);
 
         result.Should().ContainSingle();
-        result[0].TotalQuantity.Should().Be(200m);
+        result[0].TotalQuantity.Should().Be(0.2m);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public sealed class ShoppingListCalculatorTests
 
         var result = ShoppingListCalculator.Calculate([new RecipePortion(recipe, 6m)]);
 
-        result[0].TotalQuantity.Should().Be(600m);
+        result[0].TotalQuantity.Should().Be(0.6m);
     }
 
     [Fact]
@@ -49,10 +49,10 @@ public sealed class ShoppingListCalculatorTests
         result.Should().HaveCount(2);
 
         var riceEntry = result.Single(entry => entry.IngredientId == rice.Id);
-        riceEntry.TotalQuantity.Should().Be(300m);
+        riceEntry.TotalQuantity.Should().Be(0.3m);
 
         var chickenEntry = result.Single(entry => entry.IngredientId == chicken.Id);
-        chickenEntry.TotalQuantity.Should().Be(300m);
+        chickenEntry.TotalQuantity.Should().Be(0.3m);
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public sealed class ShoppingListCalculatorTests
         };
 
         recipe.ReplaceIngredients(ingredients.Select(item =>
-            new RecipeIngredient(item.Ingredient, item.Quantity)));
+            new RecipeIngredient(item.Ingredient, item.Quantity, UnitOfMeasure.Gram)));
 
         return recipe;
     }

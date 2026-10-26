@@ -48,7 +48,7 @@ public sealed class ShoppingListEndpointTests : IClassFixture<MealPreparatorApiF
 
         shoppingList.Should().ContainSingle();
         shoppingList![0].IngredientId.Should().Be(rice.Id);
-        shoppingList[0].Quantity.Should().Be(200m);
+        shoppingList[0].Quantity.Should().Be(0.2m);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class ShoppingListEndpointTests : IClassFixture<MealPreparatorApiF
             .ReadFromJsonAsync<List<ShoppingListItemDto>>(IntegrationTestHelpers.JsonOptions);
 
         shoppingList.Should().ContainSingle();
-        shoppingList![0].Quantity.Should().Be(150m);
+        shoppingList![0].Quantity.Should().Be(0.15m);
     }
 
     [Fact]

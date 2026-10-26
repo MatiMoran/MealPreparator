@@ -48,7 +48,23 @@ public sealed class IngredientEndpointsTests : IClassFixture<MealPreparatorApiFa
 
         fetched.Should().NotBeNull();
         fetched!.Name.Should().Be(name);
-        fetched.Unit.Should().Be(UnitOfMeasure.Gram);
+        fetched.Unit.Should().Be(UnitOfMeasure.Kilogram);
+    }
+
+    [Fact]
+    public async Task CreateIngredient_ShouldStoreMassInCanonicalUnitsWithoutConversionRows()
+    {
+        var created = await IntegrationTestHelpers.CreateIngredientAsync(
+            _client,
+            IntegrationTestHelpers.UniqueName("Harina"),
+            UnitOfMeasure.Gram);
+
+        var response = await _client.GetAsync($"/api/ingredients/{created.Id}");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var fetched = await response.Content.ReadFromJsonAsync<IngredientDto>(IntegrationTestHelpers.JsonOptions);
+
+        fetched!.Unit.Should().Be(UnitOfMeasure.Kilogram);
+        fetched.UnitConversions.Should().BeEmpty();
     }
 
     [Fact]

@@ -66,9 +66,33 @@ public sealed class RecipeServiceTagTests
         recipe.Tags.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task CreateAsync_ShouldPreserveBinaryPresenceAndAcceptSupportedAlternateUnits()
+    {
+        var fixture = new RecipeServiceFixture();
+        var created = await fixture.Service.CreateAsync(new CreateRecipeRequest(
+            "Arroz con sal",
+            2,
+            null,
+            null,
+            [
+                new RecipeIngredientRequest(fixture.Rice.Id, 0.5m, UnitOfMeasure.Kilogram),
+                new RecipeIngredientRequest(fixture.Salt.Id, null)
+            ]));
+
+        created.Ingredients.Should().ContainSingle(item => item.IngredientId == fixture.Rice.Id)
+            .Which.Unit.Should().Be(UnitOfMeasure.Kilogram);
+        var salt = created.Ingredients.Should().ContainSingle(item => item.IngredientId == fixture.Salt.Id).Which;
+        salt.IsBinary.Should().BeTrue();
+        salt.Quantity.Should().BeNull();
+        salt.Unit.Should().BeNull();
+    }
+
     private sealed class RecipeServiceFixture
     {
-        public Ingredient Rice { get; } = new("Arroz", UnitOfMeasure.Gram) { Id = 1 };
+        public Ingredient Rice { get; } = new("Arroz", UnitOfMeasure.Kilogram) { Id = 1 };
+
+        public Ingredient Salt { get; } = new("Sal", null, isBinary: true) { Id = 2 };
 
         public FakeRecipeRepository Recipes { get; } = new();
 
@@ -81,7 +105,7 @@ public sealed class RecipeServiceTagTests
             Service = new RecipeService(
                 Recipes,
                 Tags,
-                new FakeIngredientRepository([Rice]),
+                new FakeIngredientRepository([Rice, Salt]),
                 new FakeUnitOfWork());
         }
     }
@@ -115,6 +139,15 @@ public sealed class RecipeServiceTagTests
     {
         public List<Tag> StoredTags { get; } = [];
 
+        public Task<IReadOnlyList<Tag>> GetAllAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Tag>>(StoredTags);
+
+        public Task<Tag?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+            Task.FromResult(StoredTags.SingleOrDefault(tag => tag.Id == id));
+
+        public Task<bool> ExistsByNameAsync(string name, int? excludedId = null, CancellationToken cancellationToken = default) =>
+            Task.FromResult(StoredTags.Any(tag => tag.Id != excludedId && tag.Name.Equals(name, StringComparison.OrdinalIgnoreCase)));
+
         public Task<IReadOnlyList<Tag>> GetByNamesAsync(
             IReadOnlyCollection<string> names,
             CancellationToken cancellationToken = default) =>
@@ -124,9 +157,16 @@ public sealed class RecipeServiceTagTests
 
         public Task AddRangeAsync(IEnumerable<Tag> tags, CancellationToken cancellationToken = default)
         {
-            StoredTags.AddRange(tags);
+            foreach (var tag in tags)
+            {
+                StoredTags.Add(tag);
+            }
             return Task.CompletedTask;
         }
+
+        public Task AddAsync(Tag tag, CancellationToken cancellationToken = default) => AddRangeAsync([tag], cancellationToken);
+
+        public void Remove(Tag tag) => StoredTags.Remove(tag);
     }
 
     private sealed class FakeIngredientRepository : IIngredientRepository

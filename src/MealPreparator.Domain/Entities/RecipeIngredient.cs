@@ -21,18 +21,6 @@ public sealed class RecipeIngredient
     {
     }
 
-    public RecipeIngredient(int ingredientId, decimal? quantity, UnitOfMeasure? unit = null)
-    {
-        if (ingredientId <= 0)
-        {
-            throw new DomainValidationException("Ingredient id must be greater than zero.");
-        }
-
-        IngredientId = ingredientId;
-        SetQuantity(quantity);
-        Unit = unit;
-    }
-
     public RecipeIngredient(Ingredient ingredient, decimal? quantity, UnitOfMeasure? unit = null)
     {
         ArgumentNullException.ThrowIfNull(ingredient);
@@ -75,12 +63,14 @@ public sealed class RecipeIngredient
             throw new DomainValidationException("Ingredient quantity is too large.");
         }
 
-        if (Ingredient is not null && !Ingredient.SupportsUnit(unit))
+        if (Ingredient is not null && (!unit.HasValue || !Ingredient.SupportsUnit(unit)))
         {
             throw new DomainValidationException("The selected unit has no conversion for this ingredient.");
         }
 
-        Quantity = quantity;
+        Quantity = Ingredient is null || !unit.HasValue
+            ? quantity
+            : Ingredient.ConvertToBaseQuantity(quantity.Value, unit.Value);
         Unit = unit;
     }
 }

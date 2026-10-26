@@ -1,5 +1,6 @@
 using MealPreparator.Application.Dtos;
 using MealPreparator.Application.Services;
+using MealPreparator.Api.Services;
 
 namespace MealPreparator.Api.Endpoints;
 
@@ -30,9 +31,11 @@ public static class RecipeEndpoints
         group.MapPost("/", async Task<IResult> (
             CreateRecipeRequest request,
             RecipeService service,
+            ImageStorageService images,
             CancellationToken cancellationToken) =>
         {
-            var recipe = await service.CreateAsync(request, cancellationToken);
+            var imageUrl = await images.StoreAsync(request.ImageUrl, "recipe", cancellationToken);
+            var recipe = await service.CreateAsync(request with { ImageUrl = imageUrl }, cancellationToken);
             return Results.Created($"/api/recipes/{recipe.Id}", recipe);
         });
 
@@ -40,9 +43,11 @@ public static class RecipeEndpoints
             int id,
             UpdateRecipeRequest request,
             RecipeService service,
+            ImageStorageService images,
             CancellationToken cancellationToken) =>
         {
-            var recipe = await service.UpdateAsync(id, request, cancellationToken);
+            var imageUrl = await images.StoreAsync(request.ImageUrl, "recipe", cancellationToken);
+            var recipe = await service.UpdateAsync(id, request with { ImageUrl = imageUrl }, cancellationToken);
             return Results.Ok(recipe);
         });
 

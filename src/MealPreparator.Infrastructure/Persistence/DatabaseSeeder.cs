@@ -63,8 +63,8 @@ public static class DatabaseSeeder
 
         chickenWithRice.ReplaceIngredients(
         [
-            new RecipeIngredient(rice, 400m),
-            new RecipeIngredient(chicken, 600m),
+            new RecipeIngredient(rice, 0.4m),
+            new RecipeIngredient(chicken, 0.6m),
             new RecipeIngredient(oil, null),
             new RecipeIngredient(salt, null),
             new RecipeIngredient(onion, 1m),
@@ -87,8 +87,8 @@ public static class DatabaseSeeder
             new RecipeIngredient(apple, 2m),
             new RecipeIngredient(banana, 2m),
             new RecipeIngredient(orange, 1m),
-            new RecipeIngredient(sugar, 20m),
-            new RecipeIngredient(yogurt, 200m)
+            new RecipeIngredient(sugar, 0.02m),
+            new RecipeIngredient(yogurt, 0.2m)
         ]);
 
         dbContext.Recipes.AddRange(chickenWithRice, fruitSalad);
@@ -162,28 +162,28 @@ public static class DatabaseSeeder
         {
             ["Arroz"] =
             [
-                new(UnitOfMeasure.Tablespoon, 12m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
-                new(UnitOfMeasure.Teaspoon, 4m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
-                new(UnitOfMeasure.Cup, 185m, source, "Arroz seco, taza de referencia; el peso cambia si está cocido.")
+                new(UnitOfMeasure.Tablespoon, 0.012m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
+                new(UnitOfMeasure.Teaspoon, 0.004m, source, "Arroz seco; el peso cambia si está cocido o según el tipo de grano."),
+                new(UnitOfMeasure.Cup, 0.185m, source, "Arroz seco, taza de referencia; el peso cambia si está cocido.")
             ],
             ["Cebolla"] = [new(UnitOfMeasure.Gram, 1m / 110m, source, "Una cebolla mediana se estima en 110 g comestibles.")],
             ["Morron"] = [new(UnitOfMeasure.Gram, 1m / 119m, source, "Un morrón mediano se estima en 119 g comestibles.")],
-            ["Tomate"] = [new(UnitOfMeasure.Piece, 123m, source, "Un tomate mediano se estima en 123 g comestibles.")],
-            ["Pollo"] = [new(UnitOfMeasure.Piece, 174m, source, "Una pechuga cocida deshuesada se estima en 174 g; el corte y la cocción cambian el peso.")],
+            ["Tomate"] = [new(UnitOfMeasure.Piece, 0.123m, source, "Un tomate mediano se estima en 123 g comestibles.")],
+            ["Pollo"] = [new(UnitOfMeasure.Piece, 0.174m, source, "Una pechuga cocida deshuesada se estima en 174 g; el corte y la cocción cambian el peso.")],
             ["Manzana"] = [new(UnitOfMeasure.Gram, 1m / 182m, source, "Una manzana mediana se estima en 182 g comestibles.")],
             ["Banana"] = [new(UnitOfMeasure.Gram, 1m / 118m, source, "Una banana mediana se estima en 118 g comestibles sin cáscara.")],
             ["Naranja"] = [new(UnitOfMeasure.Gram, 1m / 131m, source, "Una naranja mediana se estima en 131 g comestibles.")],
             ["Azucar"] =
             [
-                new(UnitOfMeasure.Tablespoon, 12.5m, source, "Azúcar granulada, medida rasa aproximada."),
-                new(UnitOfMeasure.Teaspoon, 4.2m, source, "Azúcar granulada, medida rasa aproximada."),
-                new(UnitOfMeasure.Cup, 200m, source, "Azúcar granulada, taza de referencia.")
+                new(UnitOfMeasure.Tablespoon, 0.0125m, source, "Azúcar granulada, medida rasa aproximada."),
+                new(UnitOfMeasure.Teaspoon, 0.0042m, source, "Azúcar granulada, medida rasa aproximada."),
+                new(UnitOfMeasure.Cup, 0.2m, source, "Azúcar granulada, taza de referencia.")
             ],
             ["Yogur"] =
             [
-                new(UnitOfMeasure.Tablespoon, 15m, source, "Yogur natural, peso aproximado por medida rasa."),
-                new(UnitOfMeasure.Teaspoon, 5m, source, "Yogur natural, peso aproximado por medida rasa."),
-                new(UnitOfMeasure.Cup, 245m, source, "Yogur natural, taza de referencia.")
+                new(UnitOfMeasure.Tablespoon, 0.015m, source, "Yogur natural, peso aproximado por medida rasa."),
+                new(UnitOfMeasure.Teaspoon, 0.005m, source, "Yogur natural, peso aproximado por medida rasa."),
+                new(UnitOfMeasure.Cup, 0.245m, source, "Yogur natural, taza de referencia.")
             ]
         };
 

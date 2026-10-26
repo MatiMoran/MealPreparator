@@ -55,13 +55,10 @@ public static class ShoppingListCalculator
                 {
                     if (!recipeIngredient.Unit.HasValue)
                     {
-                        throw new DomainValidationException("Measured recipe ingredients must have a unit.");
+                        throw new DomainValidationException("Measured recipe ingredients must have a display unit.");
                     }
 
-                    var baseQuantity = recipeIngredient.Ingredient.ConvertToBaseQuantity(
-                        recipeIngredient.Quantity!.Value,
-                        recipeIngredient.Unit.Value);
-                    accumulator.TotalQuantity += baseQuantity * scaleFactor;
+                    accumulator.TotalQuantity += recipeIngredient.Quantity!.Value * scaleFactor;
                 }
             }
         }

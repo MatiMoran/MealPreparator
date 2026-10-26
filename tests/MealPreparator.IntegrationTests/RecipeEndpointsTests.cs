@@ -111,6 +111,52 @@ public sealed class RecipeEndpointsTests : IClassFixture<MealPreparatorApiFactor
     }
 
     [Fact]
+    public async Task CreateRecipe_ShouldAcceptBinaryAndAlternateUnitIngredientsAndCalculateShoppingList()
+    {
+        var flour = await IntegrationTestHelpers.CreateIngredientAsync(
+            _client,
+            IntegrationTestHelpers.UniqueName("Harina"),
+            UnitOfMeasure.Gram);
+        var saltName = IntegrationTestHelpers.UniqueName("Sal");
+        var saltResponse = await _client.PostAsJsonAsync(
+            "/api/ingredients",
+            new CreateIngredientRequest(saltName, null, null, IsBinary: true),
+            IntegrationTestHelpers.JsonOptions);
+        saltResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var salt = (await saltResponse.Content.ReadFromJsonAsync<IngredientDto>(IntegrationTestHelpers.JsonOptions))!;
+
+        var createResponse = await _client.PostAsJsonAsync(
+            "/api/recipes",
+            new CreateRecipeRequest(
+                IntegrationTestHelpers.UniqueName("Receta"), 2, null, null,
+                [
+                    new RecipeIngredientRequest(flour.Id, 0.5m, UnitOfMeasure.Kilogram),
+                    new RecipeIngredientRequest(salt.Id, null)
+                ]),
+            IntegrationTestHelpers.JsonOptions);
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var recipe = (await createResponse.Content.ReadFromJsonAsync<RecipeDto>(IntegrationTestHelpers.JsonOptions))!;
+        recipe.Ingredients.Should().ContainSingle(item => item.IngredientId == flour.Id)
+            .Which.Unit.Should().Be(UnitOfMeasure.Kilogram);
+        recipe.Ingredients.Should().ContainSingle(item => item.IngredientId == salt.Id)
+            .Which.IsBinary.Should().BeTrue();
+        recipe.Ingredients.Single(item => item.IngredientId == salt.Id).Quantity.Should().BeNull();
+
+        var shoppingResponse = await _client.PostAsJsonAsync(
+            "/api/shopping-list",
+            new ShoppingListRequest([new ShoppingListItemRequest(recipe.Id, 4m)]),
+            IntegrationTestHelpers.JsonOptions);
+        shoppingResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var items = await shoppingResponse.Content.ReadFromJsonAsync<List<ShoppingListItemDto>>(IntegrationTestHelpers.JsonOptions)
+            ?? throw new InvalidOperationException("Shopping list response was empty.");
+        items.Should().ContainSingle(item => item.IngredientId == flour.Id)
+            .Which.Quantity.Should().Be(1m);
+        items.Should().ContainSingle(item => item.IngredientId == salt.Id)
+            .Which.IsBinary.Should().BeTrue();
+        items.Single(item => item.IngredientId == salt.Id).Quantity.Should().BeNull();
+    }
+
+    [Fact]
     public async Task CreateRecipe_WithUnknownIngredient_ShouldReturnBadRequest()
     {
         var request = new CreateRecipeRequest(

@@ -20,7 +20,12 @@ public sealed record IngredientDto(
     UnitOfMeasure? Unit,
     bool IsBinary,
     string? ImageUrl,
-    IReadOnlyList<IngredientUnitConversionDto> UnitConversions);
+    IReadOnlyList<IngredientUnitConversionDto> UnitConversions)
+{
+    public IngredientCategory? Category => IsBinary || !Unit.HasValue
+        ? null
+        : UnitOfMeasureRules.GetCategory(Unit.Value);
+}
 
 public sealed record CreateIngredientRequest(
     string Name,
